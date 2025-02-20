@@ -1,0 +1,62 @@
+﻿@page
+@model ProjParkNet.Pages.ParkingPage.DeleteModel
+
+@{
+    ViewData["Title"] = "Admin - Apagar Parque";
+}
+
+
+
+
+<h4>Apagar Parque</h4>
+
+<div>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Parking.NamePark)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Parking.NamePark)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Parking.FileName)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Parking.FileName)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Parking.Address)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Parking.Address)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Parking.District)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Parking.District)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Parking.ZipCode)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Parking.ZipCode)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Parking.TelephoneNumber)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Parking.TelephoneNumber)
+        </dd>
+    </dl>
+    
+    <form method="post">
+        <input type="hidden" asp-for="Parking.Id" />
+        <input type="submit" value="Delete" class="btn btn-outline-danger btn-sm" /> 
+        <a asp-page="./Index" class="btn btn-outline-secondary btn-sm">Voltar</a>
+    </form>
+</div>
+<br/>
+<br/>
+

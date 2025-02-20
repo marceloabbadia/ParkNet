@@ -1,0 +1,141 @@
+﻿@page
+@model ProjParkNet.Pages.UserModel
+@{
+    var userId = User.Identity.Name;
+}
+
+<div>
+    <h1>@User.Identity.Name</h1>
+
+    <!-- Formulário para matrícula e tipo de veículo -->
+    <form method="post" asp-page-handler="UpdateVehicleData">
+        <div class="mt-6 row">
+            <div class="col-md-6">
+                <label>Informe a Matrícula do seu Veículo:</label>
+                <input type="text" asp-for="Matricula" class="form-control" required />
+            </div>
+
+            <div class="col-md-6">
+                <label>Selecione seu Tipo de Veículo:</label>
+                <br />
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="TypeVehicle" value="Carro" id="radioCarro" asp-for="TypeVehicle" checked />
+                    <label class="form-check-label" for="radioCarro">Carro</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="TypeVehicle" value="Moto" id="radioMoto" asp-for="TypeVehicle" />
+                    <label class="form-check-label" for="radioMoto">Moto</label>
+                </div>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-secondary">Atualizar Dados do Veículo</button>
+    </form>
+
+    <!-- Formulário para carregar vagas disponíveis -->
+    <form method="post" asp-page-handler="LoadSpots">
+        <input type="hidden" asp-for="Matricula" />
+        <input type="hidden" asp-for="TypeVehicle" />
+        <input type="hidden" asp-for="SelectedSpotIdent" />
+        <input type="hidden" asp-for="EntryTime" />
+        <input type="hidden" asp-for="ExitTime" />
+
+        <div class="form-group">
+            <label for="SelectedParkId"><h4>Selecione um Estacionamento:</h4></label>
+            <select class="form-control" asp-for="SelectedParkId" asp-items="@(new SelectList(Model.Parks, "Id", "NamePark"))">
+                <option value="">-- Selecione --</option>
+            </select>
+        </div>
+        <br />
+        <button type="submit" class="btn btn-primary">Carregar Vagas Disponíveis</button>
+    </form>
+
+    <!-- Formulário para selecionar uma vaga -->
+    @if (Model.Floors != null && Model.Floors.Any())
+    {
+        foreach (var floor in Model.Floors)
+        {
+            <h3>Andar @floor.FloorNumber</h3>
+            <div class="parking-grid">
+                @foreach (var group in floor.Spots.OrderBy(s => s.SpotIdent).GroupBy(s => s.SpotIdent.Substring(0, 1)))
+                {
+                    <div class="parking-row">
+                        @for (int i = 1; i <= 16; i++)
+                        {
+                            var spot = group.FirstOrDefault(s => s.SpotIdent == $"{group.Key}{i}");
+
+                            if (spot != null)
+                            {
+                                <form method="post" asp-page-handler="SelectSpot">
+                                    <input type="hidden" asp-for="Matricula" />
+                                    <input type="hidden" asp-for="TypeVehicle" />
+                                    <input type="hidden" asp-for="SelectedParkId" />
+                                    <input type="hidden" asp-for="EntryTime" />
+                                    <input type="hidden" asp-for="ExitTime" />
+                                    <input type="hidden" name="SelectedSpotIdent" value="@spot.SpotIdent" />
+
+                                    <button type="submit" class="btn @(spot.IsOccupied ? "btn-danger disabled" : "btn-success")"
+                                            @(spot.IsOccupied ? "disabled" : "")>
+                                        @(spot.TypeVehicle == "Moto" ? "Vaga Moto" : "Vaga Carro")
+                                    </button>
+                                </form>
+                            }
+                            else
+                            {
+                                <div class="btn btn-secondary disabled">Vazio</div>
+                            }
+                        }
+                    </div>
+                }
+            </div>
+        }
+    }
+    else
+    {
+        <p>Nenhuma vaga disponível.</p>
+    }
+
+    <!-- Formulário para entrada no estacionamento -->
+    <form method="post" asp-page-handler="Entrada">
+        <input type="hidden" asp-for="Matricula" />
+        <input type="hidden" asp-for="TypeVehicle" />
+        <input type="hidden" asp-for="SelectedSpotIdent" />
+        <input type="hidden" asp-for="SelectedParkId" />
+        <input type="hidden" asp-for="ExitTime" />
+
+        <button type="submit" class="btn btn-success btn-lg w-25">Entrar no Estacionamento</button>
+    </form>
+
+    <!-- Formulário para saída do estacionamento -->
+    <form method="post" asp-page-handler="Saida">
+        <input type="hidden" asp-for="Matricula" />
+        <input type="hidden" asp-for="TypeVehicle" />
+        <input type="hidden" asp-for="SelectedSpotIdent" />
+        <input type="hidden" asp-for="SelectedParkId" />
+        <input type="hidden" asp-for="EntryTime" />
+
+        <button type="submit" class="btn btn-danger btn-lg w-25" @(string.IsNullOrEmpty(Model.EntryTime) ? "disabled" : "")>Sair do Estacionamento</button>
+    </form>
+
+    <!-- Formulário para confirmar os dados -->
+    <form method="post" asp-page-handler="Confirmar">
+        <input type="hidden" asp-for="Matricula" />
+        <input type="hidden" asp-for="TypeVehicle" />
+        <input type="hidden" asp-for="SelectedSpotIdent" />
+        <input type="hidden" asp-for="SelectedParkId" />
+        <input type="hidden" asp-for="EntryTime" />
+        <input type="hidden" asp-for="ExitTime" />
+
+        <h3>Dados para Confirmação:</h3>
+        <ul>
+            <li><strong>User:</strong> @User.Identity.Name</li>
+            <li><strong>Matrícula:</strong> @Model.Matricula</li>
+            <li><strong>Tipo de Veículo:</strong> @Model.TypeVehicle</li>
+            <li><strong>Estacionamento:</strong> @Model.Parks.FirstOrDefault(p => p.Id == Model.SelectedParkId)?.NamePark</li>
+            <li><strong>Andar:</strong> @Model.Floors.FirstOrDefault(f => f.ParkingId == Model.SelectedParkId)?.FloorNumber</li>
+            <li><strong>Vaga:</strong> @Model.SelectedSpotIdent</li>
+            <li><strong>Hora Entrada:</strong> @Model.EntryTime</li>
+            <li><strong>Hora Saída:</strong> @Model.ExitTime</li>
+        </ul>
+        <button type="submit" class="btn btn-info btn-lg">Confirmar</button>
+    </form>
+</div>

@@ -1,0 +1,7 @@
+.vs/
+*.vsix
+.idea/
+*.user
+*.userosscache
+*.suo
+*.userprefs

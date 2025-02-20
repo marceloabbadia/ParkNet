@@ -1,0 +1,50 @@
+﻿@page
+@model ProjParkNet.Pages.ParkingPage.IndexModel
+
+@{
+}
+
+<div class="top-header">
+	<h2>Área Administrativa</h2>
+	<a href="/Index" class="btn btn-outline-secondary btn-sm">Voltar</a>
+</div>
+
+<p>
+	<a asp-page="Create" class="btn btn-outline-primary">Criar Novo Parque</a>
+</p>
+
+
+<br />
+<br />
+
+<h2>Lista de Estacionamentos</h2>
+
+<table class="table">
+	<thead>
+		<tr>
+			<th>Nome do Parque</th>
+			<th>Visualizar</th>
+			<th>Configurar</th>
+
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var parking in Model.Parkings)
+		{
+			<tr>
+				<td>@parking.NamePark</td>
+				<td>
+					<a href="@Url.Page("/View", new { id = parking.Id })" class="btn btn-outline-primary  btn-sm"><strong>Vista</strong></a>
+				</td>
+				<td>
+					<a asp-page="./Edit" asp-route-id="@parking.Id">Editar</a> |
+					<a asp-page="./Details" asp-route-id="@parking.Id">Detalhes</a> |
+					<a asp-page="./Delete" asp-route-id="@parking.Id">Apagar</a>
+				</td>
+			</tr>
+		}
+	</tbody>
+</table>
+<br />
+<br />
+

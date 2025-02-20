@@ -1,0 +1,61 @@
+﻿@page
+@model ProjParkNet.Pages.ParkingPage.EditModel
+
+@{
+	ViewData["Title"] = "Admin - Editar Parque";
+}
+
+<h4>Editar Dados do Parque</h4>
+<hr />
+<div class="row">
+	<div class="col-md-4">
+		<form method="post" enctype="multipart/form-data">
+			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+			<input type="hidden" asp-for="Parking.Id" />
+
+			<div class="form-group">
+				<label asp-for="Parking.NamePark" class="control-label">Nome do Parque</label>
+				<input asp-for="Parking.NamePark" class="form-control" />
+				<span asp-validation-for="Parking.NamePark" class="text-danger"></span>
+			</div>
+
+			<div class="form-group">
+				<label asp-for="Parking.Address" class="control-label">Endereço</label>
+				<input asp-for="Parking.Address" class="form-control" />
+				<span asp-validation-for="Parking.Address" class="text-danger"></span>
+			</div>
+
+			<div class="form-group">
+				<label asp-for="Parking.District" class="control-label">Distrito</label>
+				<input asp-for="Parking.District" class="form-control" />
+				<span asp-validation-for="Parking.District" class="text-danger"></span>
+			</div>
+
+			<div class="form-group">
+				<label asp-for="Parking.ZipCode" class="control-label">Código Postal</label>
+				<input asp-for="Parking.ZipCode" class="form-control" />
+				<span asp-validation-for="Parking.ZipCode" class="text-danger"></span>
+			</div>
+
+			<div class="form-group">
+				<label asp-for="Parking.TelephoneNumber" class="control-label">Telefone</label>
+				<input asp-for="Parking.TelephoneNumber" class="form-control" />
+				<span asp-validation-for="Parking.TelephoneNumber" class="text-danger"></span>
+			</div>
+
+			<div class="form-group mt-3">
+				<input type="submit" value="Salvar" class="btn btn-outline-primary btn-sm" />
+				<a asp-page="/ParkingPage/Index" class="btn btn-outline-secondary btn-sm">Voltar</a>
+			</div>
+		</form>
+	</div>
+</div>
+<br />
+<br />
+
+@section Scripts {
+	@{
+		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
+}

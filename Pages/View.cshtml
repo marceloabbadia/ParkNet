@@ -1,0 +1,53 @@
+﻿@page
+@model ProjParkNet.Pages.ViewModel
+@{
+}
+
+<div class="top-header">
+	<h1>@Model.parking.NamePark</h1>
+	<a href="/ParkingPage/Index" class="btn btn-outline-secondary btn-sm">Voltar</a>
+</div>
+
+<br />
+
+@if (Model.parking != null && Model.parking.Floors != null && Model.parking.Floors.Any())
+{
+	@foreach (var floor in Model.parking.Floors)
+	{
+		<h2>Andar @floor.FloorNumber</h2>
+
+		<div class="parking-grid">
+			@foreach (var group in floor.Spots.OrderBy(s => s.SpotIdent).GroupBy(s => s.SpotIdent.Substring(0, 1)))
+			{
+				<div class="parking-row">
+					@for (int i = 1; i <= 16; i++)
+					{
+						var spot = group.FirstOrDefault(s => s.SpotIdent == $"{group.Key}{i}");
+
+						if (spot != null)
+						{
+							<div class="parking-spot @(spot.IsOccupied ? "Vehicle-Red" : "Vehicle-Green")">
+								@(spot.TypeVehicle == "Moto" ? "Moto" : "Carro")
+							</div>
+						}
+						else
+						{
+							<div class="parking-spot empty"></div>
+						}
+					}
+				</div>
+			}
+		</div>
+
+		<br />
+		<br />
+	}
+}
+else
+{
+	<p>Estacionamento não encontrado ou sem dados.</p>
+}
+
+
+
+
