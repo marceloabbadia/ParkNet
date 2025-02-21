@@ -36,12 +36,17 @@ public class ParkingUsageRepository
 
     public async Task EndParkingAsync(string userId, DateTime exitTime)
     {
+        
+
         var activeParking = await GetActiveParkingForUserAsync(userId);
         if (activeParking != null)
         {
             activeParking.ExitTime = exitTime;
+            activeParking.ParkingSpot.IsOccupied = false;
             await _context.SaveChangesAsync();
         }
+
+       
     }
 
 

@@ -16,7 +16,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ProjParkNet")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+2c542632a2beea37cc8622d493be7af07c733f3f")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5b923d7d2e9051296552e6b49f9da708a5ef43a9")]
 [assembly: System.Reflection.AssemblyProductAttribute("ProjParkNet")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ProjParkNet")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

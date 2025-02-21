@@ -1,7 +1,13 @@
+# Build
+bin/
+obj/
+
+# Visual Studio
 .vs/
-*.vsix
-.idea/
 *.user
-*.userosscache
 *.suo
-*.userprefs
+
+# Executáveis
+*.exe
+*.dll
+*.pdb

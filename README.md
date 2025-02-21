@@ -1,2 +1,0 @@
-# ProjParkNet
-C# SQL
