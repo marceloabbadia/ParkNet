@@ -12,8 +12,8 @@ using ProjParkNet.Data;
 namespace ProjParkNet.Migrations
 {
     [DbContext(typeof(ParkingDbContext))]
-    [Migration("20250220203047_AdjustColumnTypeVehicle")]
-    partial class AdjustColumnTypeVehicle
+    [Migration("20250222021446_addUserRegister")]
+    partial class addUserRegister
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -484,8 +484,8 @@ namespace ProjParkNet.Migrations
             modelBuilder.Entity("ProjParkNet.Models.User.UserSystem", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "IdentityUser")
-                        .WithMany()
-                        .HasForeignKey("Id")
+                        .WithOne()
+                        .HasForeignKey("ProjParkNet.Models.User.UserSystem", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

@@ -78,3 +78,7 @@ footer {
     justify-content: space-between;
     align-items: center;
 }
+
+.instructions {
+    font-size: 11px;
+}

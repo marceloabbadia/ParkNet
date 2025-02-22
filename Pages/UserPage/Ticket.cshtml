@@ -1,0 +1,24 @@
+﻿@page
+@model TicketModel
+@{
+}
+
+
+<h1> IMPRIMIR TICKET</h1>
+
+<div class="ticket-container">
+    <div class="ticket-header">
+        <h1>TICKET DE ESTACIONAMENTO</h1>
+    </div>
+
+    <div class="ticket-body">
+        <ul>
+            <li><strong>Usuário:</strong> @User.Identity.Name</li>
+            <li><strong>Matrícula:</strong> @Model.Matricula</li>
+            <li><strong>Tipo de Veículo:</strong> @Model.TypeVehicle</li>
+            <li><strong>Estacionamento:</strong> @Model.SelectedParkId</li>
+            <li><strong>Vaga Selecionada:</strong> @Model.SelectedSpotIdent</li>
+            <li><strong>Hora de Entrada:</strong> @Model.EntryTime.ToString("dd/MM/yyyy HH:mm")</li>
+            <li><strong>Hora de Saída:</strong> @Model.ExitTime.ToString("dd/MM/yyyy HH:mm")</li>
+            <li><strong>Código do Ticket:</strong> XXXXXX </li>
+        </ul>

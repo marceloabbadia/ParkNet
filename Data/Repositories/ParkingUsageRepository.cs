@@ -36,23 +36,40 @@ public class ParkingUsageRepository
 
     public async Task EndParkingAsync(string userId, DateTime exitTime)
     {
-        
-
-        var activeParking = await GetActiveParkingForUserAsync(userId);
-        if (activeParking != null)
+        try
         {
-            activeParking.ExitTime = exitTime;
-            activeParking.ParkingSpot.IsOccupied = false;
-            await _context.SaveChangesAsync();
-        }
 
-       
+            if (string.IsNullOrEmpty(userId))
+            {
+                throw new ArgumentNullException(nameof(userId), " User ID cannot be empty or null ");
+            }
+
+            var activeParking = await GetActiveParkingForUserAsync(userId);
+
+            if (activeParking != null)
+            {
+                activeParking.ExitTime = exitTime;
+
+                if (activeParking.ParkingSpot != null)
+                {
+                    activeParking.ParkingSpot.IsOccupied = false;
+                }
+                await _context.SaveChangesAsync();
+            }
+
+
+        }
+        catch (Exception ex)
+        {
+            throw new Exception("Error: ", ex);
+        }
     }
 
 
-    public async Task SaveParkingUsageDataAsync(string userId, string matricula, string typeVehicle, int selectedParkId, string selectedSpotIdent, string entryTime, string exitTime)
+
+    public async Task SaveParkingUsageDataAsync(string userId, string matricula, string typeVehicle, int selectedParkId, string selectedSpotIdent, DateTime entryTime)
     {
-        
+
         var userExists = await _context.Users.AnyAsync(u => u.Id == userId);
         if (!userExists)
         {
@@ -81,8 +98,7 @@ public class ParkingUsageRepository
             Matricula = matricula,
             TypeVehicle = typeVehicle,
             ParkingSpotId = spot.Id,
-            EntryTime = DateTime.Parse(entryTime),
-            ExitTime = string.IsNullOrEmpty(exitTime) ? (DateTime?)null : DateTime.Parse(exitTime)
+            EntryTime = entryTime
         };
 
         // Marcar a vaga como ocupada
@@ -94,5 +110,29 @@ public class ParkingUsageRepository
 
         // Salvar as alterações no banco de dados
         await _context.SaveChangesAsync();
+    }
+
+    public async Task<List<ParkingUsage>> GetUserParkingHistoryAsync(string userId, DateTime? startDate = null, DateTime? endDate = null)
+    {
+        var query = _context.ParkingUsages
+            .Include(pu => pu.ParkingSpot) // Inclui informações da vaga
+            .ThenInclude(ps => ps.ParkingFloor) // Inclui informações do andar
+            .ThenInclude(pf => pf.Parking) // Inclui informações do estacionamento
+            .Where(pu => pu.UserId == userId); // Filtra pelo usuário logado
+
+        // Aplica o filtro de data de início (se fornecido)
+        if (startDate.HasValue)
+        {
+            query = query.Where(pu => pu.EntryTime >= startDate.Value);
+        }
+
+        // Aplica o filtro de data de término (se fornecido)
+        if (endDate.HasValue)
+        {
+            query = query.Where(pu => pu.EntryTime <= endDate.Value);
+        }
+
+        // Ordena por data de entrada (mais recente primeiro)
+        return await query.OrderByDescending(pu => pu.EntryTime).ToListAsync();
     }
 }

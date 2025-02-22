@@ -1,5 +1,4 @@
 ﻿
-using ProjParkNet.Data.Entities;
 
 namespace ProjParkNet.Data;
 
@@ -73,9 +72,12 @@ public class ParkingDbContext : IdentityDbContext<IdentityUser>
             .HasIndex(pu => pu.ParkingSpotId);
 
         modelBuilder.Entity<UserSystem>()
-           .HasOne(us => us.IdentityUser) // UserSystem tem um IdentityUser
-           .WithOne() // IdentityUser tem um UserSystem
-           .HasForeignKey<UserSystem>(us => us.Id);
+     .HasOne(us => us.IdentityUser) // UserSystem tem um IdentityUser
+     .WithOne() // IdentityUser tem um UserSystem
+     .HasForeignKey<UserSystem>(us => us.Id) // A chave estrangeira é o Id do UserSystem
+     .OnDelete(DeleteBehavior.Cascade); // Define o comportamento ao excluir o IdentityUser
+
+
     }
 }
 

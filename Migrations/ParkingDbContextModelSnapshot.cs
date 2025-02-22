@@ -481,8 +481,8 @@ namespace ProjParkNet.Migrations
             modelBuilder.Entity("ProjParkNet.Models.User.UserSystem", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "IdentityUser")
-                        .WithMany()
-                        .HasForeignKey("Id")
+                        .WithOne()
+                        .HasForeignKey("ProjParkNet.Models.User.UserSystem", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

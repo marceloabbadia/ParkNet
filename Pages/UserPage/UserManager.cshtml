@@ -1,0 +1,43 @@
+﻿@page
+@model ProjParkNet.Pages.UserPage.UserManagerModel
+
+@{
+    ViewData["Title"] = "Gerenciamento do Usuário";
+}
+
+<div class="container">
+    <h1 class="mt-4">Bem-vindo, @User.Identity.Name!</h1>
+    <p class="lead">Escolha uma das opções abaixo para continuar:</p>
+    
+    <div class="row mt-4">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Estacionamento</h5>
+                    <p class="card-text">Utilize o estacionamento.</p>
+                    <a href="/UserPage/UsageParking" class="btn btn-primary">Acessar Estacionamento</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Financeiro</h5>
+                    <p class="card-text">Acesse suas informações financeiras.</p>
+                    <a href="/Finance" class="btn btn-primary">Acessar Financeiro</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Histórico</h5>
+                    <p class="card-text">Consulte seu histórico de uso.</p>
+                    <a href="/UserPage/UserHistory" class="btn btn-primary">Acessar Histórico</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

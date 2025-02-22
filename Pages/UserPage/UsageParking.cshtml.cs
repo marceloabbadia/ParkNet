@@ -1,7 +1,7 @@
 
 using System.Security.Claims;
 
-namespace ProjParkNet.Pages
+namespace ProjParkNet.Pages.UserPage
 {
     public class UserModel : PageModel
     {
@@ -29,37 +29,34 @@ namespace ProjParkNet.Pages
         public string TypeVehicle { get; set; } = "Carro";
 
         [BindProperty]
-        public string EntryTime { get; set; } = string.Empty;
+        public DateTime EntryTime { get; set; }
 
         [BindProperty]
         public string Matricula { get; set; } = string.Empty;
 
         [BindProperty]
-        public string ExitTime { get; set; } = string.Empty;
+        public DateTime ExitTime { get; set; }
 
         public string ErrorMessage { get; set; } = string.Empty;
 
         public async Task<IActionResult> OnGetAsync()
         {
+
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            
+
             if (string.IsNullOrEmpty(userId))
             {
-                return RedirectToPage("/Login"); // Redireciona se não estiver autenticado
+                return RedirectToPage("/Login");
             }
 
-            // Carregar todos os estacionamentos
             Parks = await _parkingRepository.GetAllParkingsAsync();
 
-            // Buscar estacionamento ativo do usuário
             var parkingUsage = await _parkingUsageRepository.GetActiveParkingForUserAsync(userId);
 
             if (parkingUsage != null && parkingUsage.EntryTime != null && parkingUsage.ExitTime == null)
             {
-                // Buscar o ID do estacionamento diretamente
                 SelectedParkId = await _parkingSpotsRepository.GetParkingIdFromSpotAsync(parkingUsage.ParkingSpotId) ?? 0;
 
-                // Buscar os detalhes da vaga
                 var parkingSpot = await _parkingSpotsRepository.GetSpotDetailsByIdAsync(parkingUsage.ParkingSpotId);
                 if (parkingSpot != null)
                 {
@@ -68,7 +65,7 @@ namespace ProjParkNet.Pages
                 }
 
                 Matricula = parkingUsage.Matricula;
-                EntryTime = parkingUsage.EntryTime.ToString("yyyy-MM-dd HH:mm:ss");
+                EntryTime = parkingUsage.EntryTime;
             }
 
             return Page();
@@ -85,7 +82,6 @@ namespace ProjParkNet.Pages
 
             Parks = await _parkingRepository.GetAllParkingsAsync();
 
-            // Atualiza a vaga selecionada, se fornecida
             if (!string.IsNullOrEmpty(selectedSpotIdent))
             {
                 SelectedSpotIdent = selectedSpotIdent;
@@ -101,26 +97,44 @@ namespace ProjParkNet.Pages
                     break;
 
                 case "entrada":
-                    EntryTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-                    break;
 
-                case "saida":
-                    ExitTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-                    break;
-
-                case "confirmar":
                     try
                     {
-                        await _parkingUsageRepository.SaveParkingUsageDataAsync(userId, Matricula, TypeVehicle, SelectedParkId, SelectedSpotIdent, EntryTime, ExitTime);
-                        return RedirectToPage("/Confirmation");
+                        EntryTime = DateTime.UtcNow;
+
+
+                        await _parkingUsageRepository.SaveParkingUsageDataAsync(
+                            userId,
+                            Matricula,
+                            TypeVehicle,
+                            SelectedParkId,
+                            SelectedSpotIdent,
+                            EntryTime);
+
+                        return RedirectToPage("/UserPage/Ticket");
                     }
                     catch (Exception ex)
                     {
                         ErrorMessage = ex.Message;
                     }
                     break;
-            }
 
+                case "saida":
+                    try
+                    {
+                        ExitTime = DateTime.UtcNow;
+
+                        await _parkingUsageRepository.EndParkingAsync(userId, ExitTime);
+
+                        return RedirectToPage("/UserPage/Payment");
+                    }
+                    catch (Exception ex)
+                    {
+                        ErrorMessage = ex.Message;
+                    }
+                    break;
+
+            }
             return Page();
         }
     }

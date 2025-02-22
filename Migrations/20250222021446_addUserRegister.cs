@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ProjParkNet.Migrations
 {
     /// <inheritdoc />
-    public partial class AdjustColumnsParkingUsage : Migration
+    public partial class addUserRegister : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -246,6 +246,7 @@ namespace ProjParkNet.Migrations
                     ParkingSpotId = table.Column<int>(type: "int", nullable: false),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     Matricula = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    type_vehicle = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     EntryTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ExitTime = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Price = table.Column<decimal>(type: "decimal(10,2)", precision: 10, scale: 2, nullable: true),
