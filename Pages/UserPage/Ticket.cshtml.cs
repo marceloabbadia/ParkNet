@@ -1,31 +1,36 @@
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
+namespace ProjParkNet.Pages.UserPage;
 
-namespace ProjParkNet.Pages.UserPage
+public class TicketModel : PageModel
 {
-    public class TicketModel : PageModel
-    {
-        public string Matricula { get; set; }
-        public string TypeVehicle { get; set; }
-        public int SelectedParkId { get; set; }
-        public string SelectedSpotIdent { get; set; }
-        public DateTime EntryTime { get; set; }
-        public DateTime ExitTime { get; set; }
+    [BindProperty(SupportsGet = true)]
+    public string Matricula { get; set; }
 
-        public void OnGet(
-            string matricula,
-            string typeVehicle,
-            int selectedParkId,
-            string selectedSpotIdent,
-            DateTime entryTime,
-            DateTime exitTime)
+    [BindProperty(SupportsGet = true)]
+    public string TypeVehicle { get; set; }
+
+    [BindProperty(SupportsGet = true)]
+    public int SelectedParkId { get; set; }
+
+    [BindProperty(SupportsGet = true)]
+    public string SelectedSpotIdent { get; set; }
+
+    [BindProperty(SupportsGet = true)]
+    public DateTime EntryTime { get; set; }
+
+    [BindProperty(SupportsGet = true)]
+    public DateTime ExitTime { get; set; }
+
+    public string Barcode { get; set; } = "|| ||||||| ||| |||||||";
+
+    public IActionResult OnGet()
+    {
+        // Validações básicas para garantir que os dados foram fornecidos
+        if (string.IsNullOrEmpty(Matricula) || string.IsNullOrEmpty(TypeVehicle) || SelectedParkId <= 0 || string.IsNullOrEmpty(SelectedSpotIdent) || EntryTime == default || ExitTime == default)
         {
-            Matricula = matricula;
-            TypeVehicle = typeVehicle;
-            SelectedParkId = selectedParkId;
-            SelectedSpotIdent = selectedSpotIdent;
-            EntryTime = entryTime;
-            ExitTime = exitTime;
+            ModelState.AddModelError(string.Empty, "Dados do ticket inválidos.");
+            return Page();
         }
+
+        return Page();
     }
 }

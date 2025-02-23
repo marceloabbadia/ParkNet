@@ -162,6 +162,8 @@ public class ParkingRepository
             existingParking.District = parking.District;
             existingParking.ZipCode = parking.ZipCode;
             existingParking.TelephoneNumber = parking.TelephoneNumber;
+            existingParking.PricePerMinute = parking.PricePerMinute;
+            existingParking.MonthlyAgreement = parking.MonthlyAgreement;
             try
             {
                 _context.Parkings.Update(existingParking);

@@ -12,7 +12,12 @@
 <p>
 	<a asp-page="Create" class="btn btn-outline-primary">Criar Novo Parque</a>
 </p>
-
+<p>
+	<a asp-page="Admin/AdminFinance" class="btn btn-outline-danger">Financeiro Utilizadores</a>
+</p>
+<p>
+	<a asp-page="Admin/AdminFinance" class="btn btn-outline-danger">Financeiro Estacionamento</a>
+</p>
 
 <br />
 <br />
@@ -34,7 +39,7 @@
 			<tr>
 				<td>@parking.NamePark</td>
 				<td>
-					<a href="@Url.Page("/View", new { id = parking.Id })" class="btn btn-outline-primary  btn-sm"><strong>Vista</strong></a>
+					<a href="@Url.Page("/ParkingPage/View", new { id = parking.Id })" class="btn btn-outline-primary  btn-sm"><strong>Vista</strong></a>
 				</td>
 				<td>
 					<a asp-page="./Edit" asp-route-id="@parking.Id">Editar</a> |

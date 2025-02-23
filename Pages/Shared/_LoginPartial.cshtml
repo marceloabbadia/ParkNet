@@ -54,13 +54,3 @@
     }
 </ul>
 
-@{
-    // Log temporário para debug
-    Console.WriteLine($"Usuário autenticado: {SignInManager.IsSignedIn(User)}");
-    Console.WriteLine($"Nome do usuário: {User.Identity?.Name}");
-}
-
-<script>
-    console.log("Usuário autenticado: @SignInManager.IsSignedIn(User)");
-    console.log("Nome do usuário: @User.Identity?.Name");
-</script>

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace ProjParkNet.Pages.UserPage
 {
+    [Authorize]
     public class UserHistoryModel : PageModel
     {
         private readonly ParkingUsageRepository _parkingUsageRepository;

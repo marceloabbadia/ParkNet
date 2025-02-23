@@ -15,31 +15,14 @@
         public DateTime EntryTime { get; set; }
         public DateTime? ExitTime { get; set; }
 
-        public TimeSpan TotalTime => ExitTime.HasValue ? ExitTime.Value - EntryTime : TimeSpan.Zero;
 
-        public decimal TotalAmount => CalculateAmount();
+        [Column(TypeName = "total_time")]
+        public TimeSpan TotalTime { get; set; }
 
-        private decimal CalculateAmount()
-        {
-            var parking = GetParkingBySpotId(ParkingSpotId);
+        [Column(TypeName = "decimal(10, 2)")]
+        public decimal Price { get; set; }
 
-            if (parking != null)
-            {
-                decimal ratePerHour = parking.PricePerHour;
-                return (decimal)TotalTime.TotalHours * ratePerHour;
-            }
-            return 0.0m;
-        }
+        public bool IsPaid { get; set; }
 
-        private ParkingModel GetParkingBySpotId(int parkingSpotId)
-        {
-            // Aqui você recuperaria o parque associado ao spot de estacionamento
-            // No código real, você deve consultar o banco de dados para buscar o parque com base no ParkingSpotId
-            // Para fins de exemplo, estamos retornando um parque fictício
-            return new ParkingModel
-            {
-                PricePerHour = 10.0m // Exemplo de preço por hora (deve ser substituído por consulta real ao banco)
-            };
-        }
     }
 }

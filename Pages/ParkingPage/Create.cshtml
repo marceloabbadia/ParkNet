@@ -38,6 +38,18 @@
 			</div>
 			<br/>
 			<div class="form-group">
+				<label asp-for="PricePerMinute" class="control-label">Valor por minuto</label>
+				<input asp-for="PricePerMinute" class="form-control" type="number" />
+				<span asp-validation-for="PricePerMinute" class="text-danger"></span>
+			</div>
+			<br />
+			<div class="form-group">
+				<label asp-for="MonthlyAgreement" class="control-label">Valor Avença mensal</label>
+				<input asp-for="MonthlyAgreement" class="form-control" type="number" />
+				<span asp-validation-for="TelephoneNumber" class="text-danger"></span>
+			</div>
+			<br />
+			<div class="form-group">
 				<label asp-for="File" class="control-label">Inserir Arquivo </label>
 				<input asp-for="File" class="form-control" />
 				<span asp-validation-for="File" class="text-danger"></span>

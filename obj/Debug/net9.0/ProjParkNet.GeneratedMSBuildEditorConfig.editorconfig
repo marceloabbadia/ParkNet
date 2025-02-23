@@ -56,6 +56,10 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/marce/OneDrive/Área de Trabalho/cegid/c\#/ProjParkNet/Pages/ParkingPage/Admin/AdminFinance.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUGFya2luZ1BhZ2VcQWRtaW5cQWRtaW5GaW5hbmNlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/marce/OneDrive/Área de Trabalho/cegid/c\#/ProjParkNet/Pages/ParkingPage/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUGFya2luZ1BhZ2VcQ3JlYXRlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
@@ -76,6 +80,10 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUGFya2luZ1BhZ2VcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/marce/OneDrive/Área de Trabalho/cegid/c\#/ProjParkNet/Pages/ParkingPage/View.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUGFya2luZ1BhZ2VcVmlldy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/marce/OneDrive/Área de Trabalho/cegid/c\#/ProjParkNet/Pages/Privacy.cshtml]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUHJpdmFjeS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
@@ -88,8 +96,16 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/marce/OneDrive/Área de Trabalho/cegid/c\#/ProjParkNet/Pages/UserPage/Finance.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcVXNlclBhZ2VcRmluYW5jZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/marce/OneDrive/Área de Trabalho/cegid/c\#/ProjParkNet/Pages/UserPage/Payment.cshtml]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcVXNlclBhZ2VcUGF5bWVudC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/marce/OneDrive/Área de Trabalho/cegid/c\#/ProjParkNet/Pages/UserPage/PaymentConfirmation.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcVXNlclBhZ2VcUGF5bWVudENvbmZpcm1hdGlvbi5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/marce/OneDrive/Área de Trabalho/cegid/c\#/ProjParkNet/Pages/UserPage/Ticket.cshtml]
@@ -106,10 +122,6 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Users/marce/OneDrive/Área de Trabalho/cegid/c\#/ProjParkNet/Pages/UserPage/UserManager.cshtml]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcVXNlclBhZ2VcVXNlck1hbmFnZXIuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/marce/OneDrive/Área de Trabalho/cegid/c\#/ProjParkNet/Pages/View.cshtml]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXNcVmlldy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/marce/OneDrive/Área de Trabalho/cegid/c\#/ProjParkNet/Pages/_ViewImports.cshtml]

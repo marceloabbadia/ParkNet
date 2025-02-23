@@ -1,24 +1,62 @@
 ﻿@page
 @model TicketModel
 @{
+	ViewData["Title"] = "Imprimir Ticket";
 }
 
+<h2>Confirmação de Entrada</h2>
+<br />
+<br />
 
-<h1> IMPRIMIR TICKET</h1>
+<div class="container">
+	<div class="row justify-content-center">
+		<div class="col-md-6">
+			<!-- Ticket -->
+			<div class="card mb-4">
+				<div class="card-header text-center">
+					<h5>Ticket de Entrada</h5>
+				</div>
+				<div class="card-body">
+					<dl class="row">
 
-<div class="ticket-container">
-    <div class="ticket-header">
-        <h1>TICKET DE ESTACIONAMENTO</h1>
-    </div>
+						<dt class="col-sm-4">Matrícula:</dt>
+						<dd class="col-sm-8">@Model.Matricula</dd>
 
-    <div class="ticket-body">
-        <ul>
-            <li><strong>Usuário:</strong> @User.Identity.Name</li>
-            <li><strong>Matrícula:</strong> @Model.Matricula</li>
-            <li><strong>Tipo de Veículo:</strong> @Model.TypeVehicle</li>
-            <li><strong>Estacionamento:</strong> @Model.SelectedParkId</li>
-            <li><strong>Vaga Selecionada:</strong> @Model.SelectedSpotIdent</li>
-            <li><strong>Hora de Entrada:</strong> @Model.EntryTime.ToString("dd/MM/yyyy HH:mm")</li>
-            <li><strong>Hora de Saída:</strong> @Model.ExitTime.ToString("dd/MM/yyyy HH:mm")</li>
-            <li><strong>Código do Ticket:</strong> XXXXXX </li>
-        </ul>
+						<dt class="col-sm-4">Tipo de Veículo:</dt>
+						<dd class="col-sm-8">@Model.TypeVehicle</dd>
+
+						<dt class="col-sm-4">Estacionamento:</dt>
+						<dd class="col-sm-8">@Model.SelectedParkId</dd>
+
+						<dt class="col-sm-4">Vaga Selecionada:</dt>
+						<dd class="col-sm-8">@Model.SelectedSpotIdent</dd>
+
+						<dt class="col-sm-4">Hora de Entrada:</dt>
+						<dd class="col-sm-8">@Model.EntryTime.ToString("dd/MM/yyyy HH:mm")</dd>
+
+						<dt class="col-sm-4">Código de Barras:</dt>
+						<dd class="col-sm-8">
+							<div style="font-family: monospace; font-size: 1.2em; text-align: center;">
+								@Model.Barcode
+							</div>
+						</dd>
+					</dl>
+				</div>
+			</div>
+
+
+
+			<div class="text-center mt-4">
+				<button class="btn btn-primary" onclick="printTicket()">Imprimir Ticket</button>
+				<a href="/UserPage/UserManager" class="btn btn-secondary ms-2">Voltar</a>
+			</div>
+		</div>
+
+		<!-- Script para Simular Impressão -->
+		<script>
+			function printTicket() {
+				window.print();
+			}
+		</script>
+	</div>
+</div>

@@ -1,7 +1,7 @@
 ﻿@page
 @model RegisterModel
 @{
-    ViewData["Title"] = "Register";
+    ViewData["Title"] = "Novo Utilizador";
 }
 
 <h1>@ViewData["Title"]</h1>
@@ -12,33 +12,54 @@
             <h2>Create a new account.</h2>
             <hr />
             <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+
+            <!-- Campo Email -->
             <div class="form-floating mb-3">
                 <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
-                <label asp-for="Input.Email">Email</label>
+                <label asp-for="Input.Email">Seu Email</label>
                 <span asp-validation-for="Input.Email" class="text-danger"></span>
             </div>
+
+            <!-- Campo Password -->
             <div class="form-floating mb-3">
                 <input asp-for="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
-                <label asp-for="Input.Password">Password</label>
+                <label asp-for="Input.Password">Senha</label>
                 <span asp-validation-for="Input.Password" class="text-danger"></span>
             </div>
+
+            <!-- Campo ConfirmPassword -->
             <div class="form-floating mb-3">
                 <input asp-for="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
-                <label asp-for="Input.ConfirmPassword">Confirm Password</label>
+                <label asp-for="Input.ConfirmPassword">Confirmar Senha</label>
                 <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Input.Nif" class="control-label"></label>
-                <input asp-for="Input.Nif" class="form-control" />
+
+            <!-- Campo NIF -->
+            <div class="form-floating mb-3">
+                <input asp-for="Input.Nif" class="form-control" autocomplete="nif" aria-required="true" placeholder="123456789" />
+                <label asp-for="Input.Nif">NIF</label>
                 <span asp-validation-for="Input.Nif" class="text-danger"></span>
             </div>
 
-            <div class="form-group">
-                <label asp-for="Input.DrivingLicense" class="control-label"></label>
-                <input asp-for="Input.DrivingLicense" class="form-control" />
+            <!-- Campo Carta de Condução -->
+            <div class="form-floating mb-3">
+                <input asp-for="Input.DrivingLicense" class="form-control" autocomplete="driving-license" aria-required="true" placeholder="AB12345CD" />
+                <label asp-for="Input.DrivingLicense">Carta de Condução</label>
                 <span asp-validation-for="Input.DrivingLicense" class="text-danger"></span>
             </div>
+
+            <!-- Campo Cartão de Crédito -->
+            <div class="form-floating mb-3">
+                <input asp-for="Input.CreditCard" class="form-control" autocomplete="credit-card" aria-required="true" placeholder="1234 5678 9012 3456" />
+                <label asp-for="Input.CreditCard">Cartão de Crédito</label>
+                <span asp-validation-for="Input.CreditCard" class="text-danger"></span>
+            </div>
+
+            <br />
             <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
+            <br />
+            <br />
+            <br />
         </form>
     </div>
     <div class="col-md-6 col-md-offset-2">
@@ -50,8 +71,10 @@
                 {
                     <div>
                         <p>
-                            There are no external authentication services configured. See this <a href="https://go.microsoft.com/fwlink/?LinkID=532715">article
-                            about setting up this ASP.NET application to support logging in via external services</a>.
+                            There are no external authentication services configured. See this <a href="https://go.microsoft.com/fwlink/?LinkID=532715">
+                                article
+                                about setting up this ASP.NET application to support logging in via external services
+                            </a>.
                         </p>
                     </div>
                 }

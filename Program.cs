@@ -1,6 +1,3 @@
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using ProjParkNet.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +16,7 @@ builder.Services.AddRazorPages();
 builder.Services.AddScoped<ParkingRepository>();
 builder.Services.AddScoped<ParkingSpotsRepository>();
 builder.Services.AddScoped<ParkingUsageRepository>();
+builder.Services.AddScoped<TransactionsRepository>();
 
 
 var app = builder.Build();
@@ -51,6 +49,8 @@ app.MapRazorPages()
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
+    var dbContext = services.GetRequiredService<ParkingDbContext>();
+    await dbContext.Database.MigrateAsync();
     await CreateRolesAsync(services);
 }
 
@@ -68,7 +68,8 @@ async Task CreateRolesAsync(IServiceProvider serviceProvider)
         // Criar papel Admin se não existir
         if (!await roleManager.RoleExistsAsync("Admin"))
         {
-            await roleManager.CreateAsync(new IdentityRole("Admin"));
+            var adminRole = new IdentityRole("Admin");
+            await roleManager.CreateAsync(adminRole);
             Console.WriteLine("Created Role Admin.");
         }
 
@@ -78,14 +79,16 @@ async Task CreateRolesAsync(IServiceProvider serviceProvider)
 
         if (adminUser != null)
         {
+            // Verifica se o usuário já tem o papel Admin
             if (!await userManager.IsInRoleAsync(adminUser, "Admin"))
             {
                 await userManager.AddToRoleAsync(adminUser, "Admin");
+                await userManager.UpdateSecurityStampAsync(adminUser);
                 Console.WriteLine($"User {adminEmail} Added Admin.");
             }
             else
             {
-                Console.WriteLine($"The User {adminEmail} is Admin.");
+                Console.WriteLine($"The User {adminEmail} is already an Admin.");
             }
         }
         else
@@ -95,15 +98,25 @@ async Task CreateRolesAsync(IServiceProvider serviceProvider)
             {
                 UserName = adminEmail,
                 Email = adminEmail,
-               
+                EmailConfirmed = true // Define o email como confirmado
             };
 
             var createAdminResult = await userManager.CreateAsync(newAdminUser, "123456@");
 
             if (createAdminResult.Succeeded)
             {
-                await userManager.AddToRoleAsync(newAdminUser, "Admin");
-                Console.WriteLine($"Created Admin User {adminEmail}.");
+                // Adicionar o usuário ao papel Admin
+                var addToRoleResult = await userManager.AddToRoleAsync(newAdminUser, "Admin");
+
+                if (addToRoleResult.Succeeded)
+                {
+                    await userManager.UpdateSecurityStampAsync(newAdminUser);
+                    Console.WriteLine($"Created Admin User {adminEmail} and added to Admin role.");
+                }
+                else
+                {
+                    Console.WriteLine($"Failed to add user {adminEmail} to Admin role: {string.Join(", ", addToRoleResult.Errors.Select(e => e.Description))}");
+                }
             }
             else
             {

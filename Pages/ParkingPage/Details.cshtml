@@ -5,62 +5,85 @@
 	ViewData["Title"] = "Admin - Detalhes do Parque";
 }
 
+<div class="card shadow-sm">
+	<div class="card-body">
+		<h4 class="card-title">Detalhes do Parque</h4>
+		<hr />
+		<dl class="row">
+			<dt class="col-sm-3">
+				Nome do Parque
+			</dt>
+			<dd class="col-sm-9">
+				@Html.DisplayFor(model => model.Parking.NamePark)
+			</dd>
+			<dt class="col-sm-3">
+				Nome do Arquivo
+			</dt>
+			<dd class="col-sm-9">
+				@Html.DisplayFor(model => model.Parking.FileName)
+			</dd>
+			<dt class="col-sm-3">
+				Endereço
+			</dt>
+			<dd class="col-sm-9">
+				@Html.DisplayFor(model => model.Parking.Address)
+			</dd>
+			<dt class="col-sm-3">
+				Distrito
+			</dt>
+			<dd class="col-sm-9">
+				@Html.DisplayFor(model => model.Parking.District)
+			</dd>
+			<dt class="col-sm-3">
+				Código Postal
+			</dt>
+			<dd class="col-sm-9">
+				@if (int.TryParse(Model.Parking.ZipCode, out int zipCode))
+				{
+					@zipCode.ToString("0000-000")
+				}
+				else
+				{
+					@Model.Parking.ZipCode
+				}
+			</dd>
+			<dt class="col-sm-3">
+				Telefone
+			</dt>
+			<dd class="col-sm-9">
+				@Html.DisplayFor(model => model.Parking.TelephoneNumber)
+			</dd>
+			<hr/>
+			<dt class="col-sm-3">
+				Valor por Minuto
+			</dt>
+			<dd class="col-sm-9">
+				@Model.Parking.PricePerMinute.ToString("C", new System.Globalization.CultureInfo("pt-PT"))
+			</dd>
+			<br/>
+			<dt class="col-sm-3">
+				Valor Avença Mensal
+			</dt>
+			<dd class="col-sm-9">
+				@Model.Parking.MonthlyAgreement.ToString("C", new System.Globalization.CultureInfo("pt-PT"))
+			</dd>
 
-<div>
-	<h4>Detalhes do Parque</h4>
-	<hr />
-	<dl class="row">
-		<dt class="col-sm-2">
-			Nome do Parque
-		</dt>
-		<dd class="col-sm-10">
-			@Html.DisplayFor(model => model.Parking.NamePark)
-		</dd>
-		<dt class="col-sm-2">
-			Nome do Arquivo 
-		</dt>
-		<dd class="col-sm-10">
-			@Html.DisplayFor(model => model.Parking.FileName)
-		</dd>
-		<dt class="col-sm-2">
-			Endereço
-		</dt>
-		<dd class="col-sm-10">
-			@Html.DisplayFor(model => model.Parking.Address)
-		</dd>
-		<dt class="col-sm-2">
-			Distrito
-		</dt>
-		<dd class="col-sm-10">
-			@Html.DisplayFor(model => model.Parking.District)
-		</dd>
-		<dt class="col-sm-2">
-			Código Postal
-		</dt>
-		<dd class="col-sm-10">
-			@Html.DisplayFor(model => model.Parking.ZipCode)
-		</dd>
-		<dt class="col-sm-2">
-			Telefone
-		</dt>
-		<dd class="col-sm-10">
-			@Html.DisplayFor(model => model.Parking.TelephoneNumber)
-		</dd>
-		<dt class="col-sm-2 fw-bold">
-			Visualizar Parque
-		</dt>
-		<dd class="col-sm-10">
-			<a href="@Url.Page("/View", new { id = Model.Parking.Id })" class="btn btn-outline-primary btn-sm">
-				<strong>Vista</strong>
-			</a>
-		</dd>
-
-	</dl>
+			<dt class="col-sm-3 fw-bold">
+				Visualizar Parque
+			</dt>
+			<dd class="col-sm-9">
+				<a href="@Url.Page("/ParkingPage/View", new { id = Model.Parking.Id })" class="btn btn-outline-primary btn-sm">
+					<strong>Vista</strong>
+				</a>
+			</dd>
+		</dl>
+	</div>
 </div>
 
-<div>
-	<a asp-page="./Edit" asp-route-id="@Model.Parking.Id" class="btn btn-outline-danger btn-sm">Editar</a>
-	<a asp-page="./Index" class="btn btn-outline-secondary btn-sm">Voltar</a>
+<div class="mt-4">
+	<a asp-page="./Edit" asp-route-id="@Model.Parking.Id" class="btn btn-outline-primary btn-lg">Editar</a>
+	<a asp-page="./Index" class="btn btn-outline-secondary btn-lg">Voltar</a>
+	<br/>
+	<br/>
+	<br/>
 </div>
-<br/>
-<br/>

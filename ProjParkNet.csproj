@@ -7,6 +7,14 @@
 		<UserSecretsId>aspnet-ProjParkNet-48fd10a0-058d-458f-aa36-3bde58ff7cc5</UserSecretsId>
 	</PropertyGroup>
 
+	<ItemGroup>
+	  <Compile Remove="Pages\UserPage\Index.cshtml.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Content Remove="Pages\UserPage\Index.cshtml" />
+	</ItemGroup>
+
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="9.0.1" />

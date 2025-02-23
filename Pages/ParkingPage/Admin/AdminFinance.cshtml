@@ -1,0 +1,104 @@
+﻿@page
+@model ProjParkNet.Pages.ParkingPage.Admin.AdminFinanceModel
+@{
+}
+
+
+<h2>Financeiro Administrativo</h2>
+<div class="container">
+	<div class="row">
+		<div class="col-md-6">
+			<!-- Formulário de Consulta de Saldo -->
+			<form method="get" class="mb-4">
+				<label for="Nif" class="form-label">Informe o NIF:</label>
+				<div class="input-group mb-3">
+					<input type="text" asp-for="Nif" class="form-control" required />
+				</div>
+
+				<!-- Botões alinhados horizontalmente -->
+				<div class="d-flex gap-2">
+					<button type="submit" class="btn btn-primary flex-grow-1">Consultar Saldo</button>
+					<span asp-validation-for="Nif" class="text-danger"></span>
+
+			</form>
+
+		
+				<form method="post" asp-page-handler="Back" style="display: inline;">
+					<button type="submit" class="btn btn-secondary flex-grow-1">Voltar</button>
+				</form>
+			
+		</div>
+
+
+		@if (!string.IsNullOrEmpty(Model.Nif))
+		{
+			<!-- Exibição do Saldo Atual -->
+			<div class="card mb-4">
+				<div class="card-body">
+					<h5 class="card-title">Consulta de Saldo</h5>
+					<p><strong>Saldo Atual:</strong> @Model.CurrentBalance.ToString("C", new System.Globalization.CultureInfo("pt-PT"))</p>
+				</div>
+			</div>
+
+			<!-- Adicionar Saldo -->
+			<div class="card mb-4">
+				<div class="card-body">
+					<h5 class="card-title">Adicionar Saldo</h5>
+					<form method="post" asp-page-handler="AddBalanceAdmin">
+						<input type="hidden" asp-for="Nif" />
+						<input type="number" asp-for="AddBalanceAmount" class="form-control mb-2" step="0.01" min="0" required />
+						<button type="submit" class="btn btn-success">Adicionar Saldo</button>
+						<span asp-validation-for="AddBalanceAmount" class="text-danger"></span>
+					</form>
+				</div>
+			</div>
+
+			<!-- Debitar Saldo -->
+			<div class="card">
+				<div class="card-body">
+					<h5 class="card-title">Debitar Saldo</h5>
+					<form method="post" asp-page-handler="DebitBalanceAdmin">
+						<input type="hidden" asp-for="Nif" />
+						<input type="number" asp-for="DebitBalanceAmount" class="form-control mb-2" step="0.01" min="0" required />
+						<button type="submit" class="btn btn-danger">Debitar Saldo</button>
+						<span asp-validation-for="DebitBalanceAmount" class="text-danger"></span>
+					</form>
+				</div>
+			</div>
+		}
+	</div>
+
+	<div class="col-md-6">
+		<!-- Histórico de Transações -->
+		<div class="card">
+			<div class="card-header"><h5>Histórico de Transações</h5></div>
+			<div class="card-body" style="max-height: 400px; overflow-y: auto;">
+				@if (Model.Transactions.Any())
+				{
+					<ul class="list-group">
+						@foreach (var transaction in Model.Transactions)
+						{
+							<li class="list-group-item">
+								@transaction.TransactionDate.ToString("dd/MM/yyyy HH:mm") -
+								@transaction.Type -
+								@if (transaction.Type == "Debito")
+								{
+									<span class="text-danger">(@transaction.Amount.ToString("C", new System.Globalization.CultureInfo("pt-PT")))</span>
+								}
+								else
+								{
+									<span>@transaction.Amount.ToString("C", new System.Globalization.CultureInfo("pt-PT"))</span>
+								}
+							</li>
+						}
+					</ul>
+				}
+				else
+				{
+					<p class="text-muted">Sem transações.</p>
+				}
+			</div>
+		</div>
+	</div>
+</div>
+</div>

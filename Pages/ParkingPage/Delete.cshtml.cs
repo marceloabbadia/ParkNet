@@ -1,6 +1,7 @@
 ﻿
 namespace ProjParkNet.Pages.ParkingPage;
 
+[Authorize(Roles = "Admin")]
 public class DeleteModel : PageModel
 {
     private readonly ParkingRepository _parkingRepository;

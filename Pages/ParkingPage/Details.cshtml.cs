@@ -1,6 +1,7 @@
 ﻿
 namespace ProjParkNet.Pages.ParkingPage;
 
+[Authorize(Roles = "Admin")]
 public class DetailsModel : PageModel
 {
     private readonly ParkingRepository _parkingRepository;

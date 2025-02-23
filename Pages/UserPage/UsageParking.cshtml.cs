@@ -1,8 +1,10 @@
 
 using System.Security.Claims;
+using ProjParkNet.Data.Entities;
 
 namespace ProjParkNet.Pages.UserPage
 {
+    [Authorize]
     public class UserModel : PageModel
     {
         private readonly ParkingUsageRepository _parkingUsageRepository;
@@ -35,7 +37,7 @@ namespace ProjParkNet.Pages.UserPage
         public string Matricula { get; set; } = string.Empty;
 
         [BindProperty]
-        public DateTime ExitTime { get; set; }
+        public DateTime? ExitTime { get; set; }
 
         public string ErrorMessage { get; set; } = string.Empty;
 
@@ -71,6 +73,8 @@ namespace ProjParkNet.Pages.UserPage
             return Page();
         }
 
+
+
         public async Task<IActionResult> OnPostAsync(string handler, string selectedSpotIdent)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -97,12 +101,9 @@ namespace ProjParkNet.Pages.UserPage
                     break;
 
                 case "entrada":
-
                     try
                     {
                         EntryTime = DateTime.UtcNow;
-
-
                         await _parkingUsageRepository.SaveParkingUsageDataAsync(
                             userId,
                             Matricula,
@@ -111,7 +112,16 @@ namespace ProjParkNet.Pages.UserPage
                             SelectedSpotIdent,
                             EntryTime);
 
-                        return RedirectToPage("/UserPage/Ticket");
+                        return RedirectToPage("/UserPage/Ticket", new
+                        
+                        {
+                            userId,
+                            Matricula,
+                            TypeVehicle,
+                            EntryTime,
+                            SelectedParkId,
+                            SelectedSpotIdent,
+                        });
                     }
                     catch (Exception ex)
                     {
@@ -119,23 +129,48 @@ namespace ProjParkNet.Pages.UserPage
                     }
                     break;
 
-                case "saida":
-                    try
-                    {
-                        ExitTime = DateTime.UtcNow;
+                case "ticket":
+                    return RedirectToPage("/UserPage/Ticket");
 
-                        await _parkingUsageRepository.EndParkingAsync(userId, ExitTime);
-
-                        return RedirectToPage("/UserPage/Payment");
-                    }
-                    catch (Exception ex)
-                    {
-                        ErrorMessage = ex.Message;
-                    }
+                default:
+                    ErrorMessage = "Ação inválida.";
                     break;
-
             }
+
             return Page();
         }
+
+
+        public async Task<IActionResult> OnPostSaidaAsync()
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                return RedirectToPage("/Login");
+            }
+
+            try
+            {
+                // Finaliza o estacionamento chamando o repositório
+                var parkingUsageId = await _parkingUsageRepository.EndParkingAsync(userId);
+                if (parkingUsageId == null)
+                {
+                    ErrorMessage = "Não foi possível encontrar um registro ativo de estacionamento.";
+                    return Page();
+                }
+
+                // Redireciona para a página de pagamento com o ID do estacionamento
+                return RedirectToPage("/UserPage/Payment", new { parkingUsageId });
+               
+            }
+            catch (Exception ex)
+            {
+                // Captura erros e exibe uma mensagem de erro na página
+                ErrorMessage = $"Erro ao registrar saída: {ex.Message}";
+                return Page();
+            }
+        }
+
     }
 }

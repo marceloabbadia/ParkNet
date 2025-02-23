@@ -43,10 +43,22 @@
 				<input asp-for="Parking.TelephoneNumber" class="form-control" />
 				<span asp-validation-for="Parking.TelephoneNumber" class="text-danger"></span>
 			</div>
-
+			<br />
+			<div class="form-group">
+				<label asp-for="Parking.PricePerMinute" class="control-label">Valor por minuto</label>
+				<input asp-for="Parking.PricePerMinute" class="form-control" type="number" />
+				<span asp-validation-for="Parking.PricePerMinute" class="text-danger"></span>
+			</div>
+			<br />
+			<div class="form-group">
+				<label asp-for="Parking.MonthlyAgreement" class="control-label">Valor Avença mensal</label>
+				<input asp-for="Parking.MonthlyAgreement" class="form-control" type="number" />
+				<span asp-validation-for="Parking.MonthlyAgreement" class="text-danger"></span>
+			</div>
+			<br />
 			<div class="form-group mt-3">
-				<input type="submit" value="Salvar" class="btn btn-outline-primary btn-sm" />
-				<a asp-page="/ParkingPage/Index" class="btn btn-outline-secondary btn-sm">Voltar</a>
+				<input type="submit" value="Salvar" class="btn btn-outline-primary btn-lg" />
+				<a asp-page="/ParkingPage/Index" class="btn btn-outline-secondary btn-lg">Voltar</a>
 			</div>
 		</form>
 	</div>

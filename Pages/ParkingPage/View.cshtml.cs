@@ -1,14 +1,13 @@
-
-namespace ProjParkNet.Pages
+namespace ProjParkNet.Pages.ParkingPage
 {
-    [Authorize ]
+    [Authorize]
 
     public class ViewModel : PageModel
     {
-        
+
         private readonly ParkingRepository _parkingRepository;
 
-        public ViewModel (ParkingRepository parkingRepository)
+        public ViewModel(ParkingRepository parkingRepository)
         {
             _parkingRepository = parkingRepository;
 

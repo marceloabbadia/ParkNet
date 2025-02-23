@@ -1,6 +1,7 @@
 ﻿
 namespace ProjParkNet.Pages.ParkingPage;
 
+[Authorize(Roles = "Admin")]
 public class CreateModel : PageModel
 {
     private readonly ParkingRepository _parkingRepository;
@@ -36,6 +37,12 @@ public class CreateModel : PageModel
     public string TelephoneNumber { get; set; }
     public string Message { get; set; }
 
+    [BindProperty]
+    public decimal MonthlyAgreement { get; set; }
+
+    [BindProperty]
+    public decimal PricePerMinute { get; set; }
+
     public async Task<IActionResult> OnPostAsync()
     {
         if (!ModelState.IsValid)
@@ -68,6 +75,9 @@ public class CreateModel : PageModel
                 parking.District = District;
                 parking.ZipCode = ZipCode;
                 parking.TelephoneNumber = TelephoneNumber;
+                parking.PricePerMinute = PricePerMinute;
+                parking.MonthlyAgreement = MonthlyAgreement;
+
 
                 await _parkingRepository.SaveParkingAsync(parking);
 

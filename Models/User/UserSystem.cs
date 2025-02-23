@@ -5,7 +5,6 @@ public class UserSystem
     [Key]
     public string Id { get; set; }
 
-    [ForeignKey("Id")]
     public IdentityUser IdentityUser { get; set; }
 
 
@@ -19,7 +18,12 @@ public class UserSystem
     [Column("driving_license")]
     public string DrivingLicense { get; set; }
 
-   
+    [Required]
+    [StringLength(16, MinimumLength = 16, ErrorMessage = "O Cartão de Crédito deve conter 9 caracteres.")]
+    [Column("credit_card")]
+    public string CreditCard { get; set; }
+
+
 }
 
 

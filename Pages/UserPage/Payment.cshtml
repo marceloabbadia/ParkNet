@@ -1,7 +1,66 @@
-﻿@page
-@model PaymentModel
+﻿
+@page
+@model ProjParkNet.Pages.UserPage.PaymentModel
 @{
+    ViewData["Title"] = "Pagamento";
 }
 
+<h1>Pagamento</h1>
 
-<h1> PAGAMENTO</h1>
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <!-- Formulário de Pagamento -->
+            <form method="post" class="mb-4">
+                <!-- Exibe mensagens de erro -->
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                <!-- Detalhes do Estacionamento -->
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">Detalhes do Estacionamento</h5>
+                        <dl class="row">
+                            <dt class="col-sm-4">Matrícula:</dt>
+                            <dd class="col-sm-8">@Model.Matricula</dd>
+
+                            <dt class="col-sm-4">Tipo de Veículo:</dt>
+                            <dd class="col-sm-8">@Model.TypeVehicle</dd>
+
+                            <dt class="col-sm-4">Estacionamento:</dt>
+                            <dd class="col-sm-8">@Model.SelectedParkId</dd>
+
+                            <dt class="col-sm-4">Vaga Selecionada:</dt>
+                            <dd class="col-sm-8">@Model.SelectedSpotIdent</dd>
+
+                            <dt class="col-sm-4">Hora de Entrada:</dt>
+                            <dd class="col-sm-8">@Model.EntryTime.ToString("dd/MM/yyyy HH:mm")</dd>
+
+                            <dt class="col-sm-4">Hora de Saída:</dt>
+                            <dd class="col-sm-8">@Model.ExitTime?.ToString("dd/MM/yyyy HH:mm")</dd>
+
+                            <dt class="col-sm-4">Valor a Pagar:</dt>
+                            <dd class="col-sm-8">@Model.AmountToPay.ToString("C")</dd>
+                        </dl>
+                    </div>
+                </div>
+
+                <!-- Método de Pagamento -->
+                <div class="form-group">
+                    <label for="PaymentMethod" class="form-label">Escolha o método de pagamento:</label>
+                    <select id="PaymentMethod" name="PaymentMethod" class="form-control" required>
+                        <option value="">-- Selecione --</option>
+                        <option value="CreditCard">Cartão de Crédito</option>
+                        <option value="Balance">Saldo do Usuário</option>
+                    </select>
+                    @if (!Model.IsCreditCardActive)
+                    {
+                        <small class="form-text text-muted mt-2">O cartão de crédito está desativado ou tem saldo insuficiente.</small>
+                    }
+                </div>
+
+                <!-- Botão de Confirmação -->
+                <button type="submit" class="btn btn-primary mt-3">Confirmar Pagamento</button>
+            </form>
+        </div>
+    </div>
+</div>

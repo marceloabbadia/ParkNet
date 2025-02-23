@@ -128,6 +128,10 @@ namespace ProjParkNet.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Email")
+                        .IsUnique()
+                        .HasFilter("[Email] IS NOT NULL");
+
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
 
@@ -244,14 +248,14 @@ namespace ProjParkNet.Migrations
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("file_name");
 
+                    b.Property<decimal>("MonthlyAgreement")
+                        .HasPrecision(10, 2)
+                        .HasColumnType("decimal(10,2)")
+                        .HasColumnName("price_monthly_agreement");
+
                     b.Property<string>("NamePark")
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("name_park");
-
-                    b.Property<decimal>("PricePerHour")
-                        .HasPrecision(10, 2)
-                        .HasColumnType("decimal(10,2)")
-                        .HasColumnName("price_hour");
 
                     b.Property<decimal>("PricePerMinute")
                         .HasPrecision(10, 2)
@@ -347,7 +351,10 @@ namespace ProjParkNet.Migrations
 
                     b.Property<decimal?>("Price")
                         .HasPrecision(10, 2)
-                        .HasColumnType("decimal(10,2)");
+                        .HasColumnType("decimal(10, 2)");
+
+                    b.Property<int>("TotalTimeMinutes")
+                        .HasColumnType("int");
 
                     b.Property<string>("TypeVehicle")
                         .HasColumnType("nvarchar(max)")
@@ -365,10 +372,33 @@ namespace ProjParkNet.Migrations
                     b.ToTable("ParkingUsages");
                 });
 
+            modelBuilder.Entity("ProjParkNet.Models.User.UserBalance", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<decimal>("CurrentBalance")
+                        .HasPrecision(10, 2)
+                        .HasColumnType("decimal(10,2)");
+
+                    b.HasKey("UserId");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("UserBalances");
+                });
+
             modelBuilder.Entity("ProjParkNet.Models.User.UserSystem", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("CreditCard")
+                        .IsRequired()
+                        .HasMaxLength(16)
+                        .HasColumnType("nvarchar(16)")
+                        .HasColumnName("credit_card");
 
                     b.Property<string>("DrivingLicense")
                         .IsRequired()
@@ -384,7 +414,47 @@ namespace ProjParkNet.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CreditCard")
+                        .IsUnique();
+
+                    b.HasIndex("Nif")
+                        .IsUnique();
+
                     b.ToTable("UserSystems");
+                });
+
+            modelBuilder.Entity("ProjParkNet.Models.User.UserTransaction", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal>("Amount")
+                        .HasPrecision(10, 2)
+                        .HasColumnType("decimal(10,2)");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("TransactionDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserTransactions");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -465,15 +535,25 @@ namespace ProjParkNet.Migrations
                     b.HasOne("ProjParkNet.Data.Entities.ParkingSpot", "ParkingSpot")
                         .WithMany()
                         .HasForeignKey("ParkingSpotId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("ProjParkNet.Models.User.UserSystem", "User")
                         .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .HasForeignKey("UserId");
 
                     b.Navigation("ParkingSpot");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("ProjParkNet.Models.User.UserBalance", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("User");
                 });
@@ -487,6 +567,17 @@ namespace ProjParkNet.Migrations
                         .IsRequired();
 
                     b.Navigation("IdentityUser");
+                });
+
+            modelBuilder.Entity("ProjParkNet.Models.User.UserTransaction", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("ProjParkNet.Data.Entities.Parking", b =>

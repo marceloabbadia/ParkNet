@@ -30,9 +30,9 @@ public class ParkingModel
     [Phone(ErrorMessage = "Número de telefone inválido.")]
     public string TelephoneNumber { get; set; }
 
-    [Column("price_hour")]
-    [Required(ErrorMessage = "O Preço por hora é obrigatório.")]
-    public decimal PricePerHour { get; set; }
+    [Column("price_monthly_agreement")]
+    [Required(ErrorMessage = "O Preço da mensalidade é obrigatória.")]
+    public decimal MonthlyAgreement { get; set; }
 
     [Column("price_minute")]
     [Required(ErrorMessage = "O Preço por minuto é obrigatório.")]

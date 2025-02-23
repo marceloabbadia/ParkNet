@@ -2,170 +2,181 @@
 @model UserModel
 @{
 	var userId = User.Identity.Name;
+	bool canEnter = !string.IsNullOrWhiteSpace(Model.Matricula) && !string.IsNullOrWhiteSpace(Model.SelectedSpotIdent);
 
 }
 
 
-<div>
 
-	<div>
-		<h1>Bem-vindo, @User.Identity.Name!</h1>
+<h1>Bem-vindo, @User.Identity.Name!</h1>
 
-		<!-- Instruções para o usuário -->
-		<div class="instructions">
-			<p><strong>Passos para utilizar o sistema:</strong></p>
-			<ul>
-				<li><strong> Informe a matrícula do seu veículo:</strong> Preencha o campo com a placa do seu veículo.</li>
-				<li><strong> Escolha o tipo do seu veículo:</strong> Selecione entre "Carro" ou "Moto".</li>
-				<li><strong> Clique no botão para confirmar os dados do seu veículo:</strong> Após preencher os campos, confirme clicando no botão.</li>
-				<li><strong> Selecione o estacionamento:</strong> Escolha o estacionamento de sua preferência.</li>
-				<li><strong> Clique no botão "Carregar Vagas Disponíveis":</strong> Isso mostrará as vagas disponíveis no estacionamento selecionado.</li>
-				<li><strong> Clique na vaga disponível (na cor verde):</strong> Escolha uma vaga livre, indicada pela cor verde.</li>
-				<li><strong> Confirme a entrada clicando no botão "Entrar no Estacionamento":</strong> Finalize o processo de entrada no estacionamento.</li>
-				<li><strong> Imprima seu ticket de estacionamento:</strong> Após a entrada, você poderá imprimir o ticket de estacionamento.</li>
-			</ul>
+<div class="instructions">
+	<p><strong>Instruções para utilização do sistema:</strong></p>
+	<ul>
+		<li><strong>Informe a matrícula do seu veículo:</strong></li>
+		<li><strong>Escolha o tipo do seu veículo:</strong> Selecione entre “Carro” ou “Moto”.</li>
+		<li><strong>Confirme os dados do veículo:</strong> Após preencher os campos, clique no botão para validar as informações do seu veículo.</li>
+		<li><strong>Selecione o estacionamento:</strong> Escolha o estacionamento de sua preferência dentre as opções disponíveis.</li>
+		<li><strong>Carregue as vagas disponíveis:</strong> O botão “Carregar Vagas Disponíveis” possibilita visualizar as vagas livres no estacionamento selecionado.</li>
+		<li><strong>Escolha uma vaga:</strong> Selecione uma vaga livre, identificada pela cor verde.</li>
+		<li><strong>Registre sua entrada:</strong> Após confirmar os dados do veículo e a vaga, clique no botão “Entrar no Estacionamento”</li>
+		<li><strong> O botão será habilitado somente após a confirmação dos dados.</strong></li>
+	</ul>
+</div>
+
+
+
+<form method="post" asp-page-handler="UpdateVehicleData">
+	<div class="mt-6 row">
+		<div class="col-md-6">
+			<label>Matrícula do Veículo:</label>
+			<input type="text" asp-for="Matricula" class="form-control" required />
+		</div>
+		<br />
+
+		<div class="col-md-6">
+			<label>Vaga Selecionada:</label>
+			<input type="text" value="@Model.SelectedSpotIdent" class="form-control" readonly />
 		</div>
 
 
-		<form method="post" asp-page-handler="UpdateVehicleData">
-			<div class="mt-6 row">
-				<div class="col-md-6">
-					<label>Matrícula do Veículo:</label>
-					<input type="text" asp-for="Matricula" class="form-control" required />
-				</div>
-				<br />
-
-				<div class="col-md-6">
-					<label>Vaga Selecionada:</label>
-					<input type="text" value="@Model.SelectedSpotIdent" class="form-control" readonly />
-				</div>
-
-
-				<div class="col-md-6">
-					<br />
-					<label>Selecione seu Tipo de Veículo:</label>
-					<br />
-					<div class="form-check form-check-inline">
-						<input class="form-check-input" type="radio" name="TypeVehicle" value="Carro" id="radioCarro" asp-for="TypeVehicle" checked />
-						<label class="form-check-label" for="radioCarro">Carro</label>
-					</div>
-					<div class="form-check form-check-inline">
-						<input class="form-check-input" type="radio" name="TypeVehicle" value="Moto" id="radioMoto" asp-for="TypeVehicle" />
-						<label class="form-check-label" for="radioMoto">Moto</label>
-					</div>
-				</div>
-
+		<div class="col-md-6">
+			<br />
+			<label>Selecione seu Tipo de Veículo:</label>
+			<br />
+			<div class="form-check form-check-inline">
+				<input class="form-check-input" type="radio" name="TypeVehicle" value="Carro" id="radioCarro" asp-for="TypeVehicle" checked />
+				<label class="form-check-label" for="radioCarro">Carro</label>
 			</div>
-			<br />
-
-			<button type="submit" class="btn btn-secondary">Confirmar Dados do Veículo</button>
-		</form>
-
-		<br />
-
-		<form method="post" asp-page-handler="LoadSpots">
-			<input type="hidden" asp-for="Matricula" />
-			<input type="hidden" asp-for="TypeVehicle" />
-			<input type="hidden" asp-for="SelectedSpotIdent" />
-			<input type="hidden" asp-for="EntryTime" />
-			<input type="hidden" asp-for="ExitTime" />
-			<br />
-
-			<div class="form-group">
-				<label for="SelectedParkId"><h4>Selecione o Estacionamento:</h4></label>
-				<select class="form-control" asp-for="SelectedParkId" asp-items="@(new SelectList(Model.Parks, "Id", "NamePark"))">
-					<option value="">-- Selecione --</option>
-				</select>
+			<div class="form-check form-check-inline">
+				<input class="form-check-input" type="radio" name="TypeVehicle" value="Moto" id="radioMoto" asp-for="TypeVehicle" />
+				<label class="form-check-label" for="radioMoto">Moto</label>
 			</div>
-			<br />
-			<button type="submit" class="btn btn-secondary">Verificar Vagas Disponíveis</button>
-		</form>
-		<br />
-		@if (Model.Floors != null && Model.Floors.Any())
-		{
-			foreach (var floor in Model.Floors)
+		</div>
+
+	</div>
+	<br />
+
+	<button type="submit" class="btn btn-secondary">Confirmar Dados do Veículo</button>
+</form>
+
+<br />
+
+<form method="post" asp-page-handler="LoadSpots">
+	<input type="hidden" asp-for="Matricula" />
+	<input type="hidden" asp-for="TypeVehicle" />
+	<input type="hidden" asp-for="SelectedSpotIdent" />
+	<input type="hidden" asp-for="EntryTime" />
+	<input type="hidden" asp-for="ExitTime" />
+	<br />
+
+	<div class="form-group">
+		<label for="SelectedParkId"><h4>Selecione o Estacionamento:</h4></label>
+		<select class="form-control" asp-for="SelectedParkId" asp-items="@(new SelectList(Model.Parks, "Id", "NamePark"))">
+			<option value="">-- Selecione --</option>
+		</select>
+	</div>
+	<br />
+	<button type="submit" class="btn btn-secondary">Verificar Vagas Disponíveis</button>
+</form>
+<br />
+@if (Model.Floors != null && Model.Floors.Any())
+{
+	foreach (var floor in Model.Floors)
+	{
+		<h3>Andar @floor.FloorNumber</h3>
+		<div class="parking-grid">
+			@foreach (var group in floor.Spots.OrderBy(s => s.SpotIdent).GroupBy(s => s.SpotIdent.Substring(0, 1)))
 			{
-				<h3>Andar @floor.FloorNumber</h3>
-				<div class="parking-grid">
-					@foreach (var group in floor.Spots.OrderBy(s => s.SpotIdent).GroupBy(s => s.SpotIdent.Substring(0, 1)))
+				<div class="parking-row">
+					@for (int i = 1; i <= 16; i++)
 					{
-						<div class="parking-row">
-							@for (int i = 1; i <= 16; i++)
-							{
-								var spot = group.FirstOrDefault(s => s.SpotIdent == $"{group.Key}{i}");
+						var spot = group.FirstOrDefault(s => s.SpotIdent == $"{group.Key}{i}");
 
-								if (spot != null)
-								{
-									<form method="post" asp-page-handler="SelectSpot">
-										<input type="hidden" asp-for="Matricula" />
-										<input type="hidden" asp-for="TypeVehicle" />
-										<input type="hidden" asp-for="SelectedParkId" />
-										<input type="hidden" asp-for="EntryTime" />
-										<input type="hidden" asp-for="ExitTime" />
-										<input type="hidden" name="SelectedSpotIdent" value="@spot.SpotIdent" />
+						if (spot != null)
+						{
+							<form method="post" asp-page-handler="SelectSpot">
+								<input type="hidden" asp-for="Matricula" />
+								<input type="hidden" asp-for="TypeVehicle" />
+								<input type="hidden" asp-for="SelectedParkId" />
+								<input type="hidden" asp-for="EntryTime" />
+								<input type="hidden" asp-for="ExitTime" />
+								<input type="hidden" name="SelectedSpotIdent" value="@spot.SpotIdent" />
 
-										<button type="submit" class="btn @(spot.IsOccupied ? "btn-danger disabled" : "btn-success")"
-										@(spot.IsOccupied ? "disabled" : "")>
-											@(spot.TypeVehicle == "Moto" ? "Vaga Moto" : "Vaga Carro")
-										</button>
-									</form>
-								}
-								else
-								{
-									<div class="btn btn-secondary disabled">Vazio</div>
-								}
-							}
-						</div>
+								<button type="submit" class="btn @(spot.IsOccupied ? "btn-danger disabled" : "btn-success")"
+								@(spot.IsOccupied ? "disabled" : "")>
+									@(spot.TypeVehicle == "Moto" ? "Vaga Moto" : "Vaga Carro")
+								</button>
+							</form>
+						}
+						else
+						{
+							<div class="btn btn-secondary disabled">Vazio</div>
+						}
 					}
 				</div>
 			}
+		</div>
+	}
+}
+
+<br />
+<br />
+
+@if (Model.EntryTime == default(DateTime))
+{
+		<div class="d-flex justify-content-center">
+			<div class="mx-2">
+				<form method="post" asp-page-handler="Entrada">
+					<input type="hidden" asp-for="Matricula" />
+					<input type="hidden" asp-for="TypeVehicle" />
+					<input type="hidden" asp-for="SelectedSpotIdent" />
+					<input type="hidden" asp-for="SelectedParkId" />
+					<input type="hidden" asp-for="ExitTime" />
+					<button type="submit" class="btn btn-success btn-lg" style="width:200px;"
+					@(canEnter ? "" : "disabled=\"disabled\"")>
+						Entrar no Estacionamento
+					</button>
+				</form>
+				<br/>
+				<br/>
+				<br/>
+			</div>
+		</div>
+		}
+		else if (Model.EntryTime != default(DateTime) && !Model.ExitTime.HasValue)
+		{
+		<div class="d-flex justify-content-center gap-4">
+			<div class="mx-2">
+				<a href="/UserPage/Ticket?matricula=@Model.Matricula&typeVehicle=@Model.TypeVehicle&selectedParkId=@Model.SelectedParkId&selectedSpotIdent=@Model.SelectedSpotIdent&entryTime=@Model.EntryTime.ToString("o")&exitTime=@Model.ExitTime?.ToString("o")"
+				   class="btn btn-info btn-lg w-100">
+					Imprimir Ticket
+				</a>
+			</div>
+			<div class="mx-2">
+				<form method="post" asp-page-handler="Saida">
+					<input type="hidden" asp-for="Matricula" />
+					<input type="hidden" asp-for="TypeVehicle" />
+					<input type="hidden" asp-for="SelectedSpotIdent" />
+					<input type="hidden" asp-for="SelectedParkId" />
+					<input type="hidden" asp-for="EntryTime" />
+					<button type="submit" class="btn btn-warning btn-lg w-100">
+						Sair do Estacionamento
+					</button>
+				</form>
+			</div>
+			<div class="mx-2">
+				<a href="/UserPage/UserManager" class="btn btn-danger btn-lg w-100">
+					Voltar
+				</a>
+				<br />
+				<br />
+				<br />
+
+			</div>
+		</div>
 		}
 
-		<br />
-		<br />
-
-		<div class="d-flex justify-content-md-between mt-4">
-			<!-- Formulário para "Entrada" -->
-			<form method="post" asp-page-handler="Entrada">
-				<input type="hidden" asp-for="Matricula" />
-				<input type="hidden" asp-for="TypeVehicle" />
-				<input type="hidden" asp-for="SelectedSpotIdent" />
-				<input type="hidden" asp-for="SelectedParkId" />
-				<input type="hidden" asp-for="ExitTime" />
-				<button type="submit" class="btn btn-success btn-lg w-100">Entrar no Estacionamento</button>
-			</form>
-
-			<!-- Formulário para "Imprimir Ticket" -->
-			<form method="post" asp-page="/Ticket"
-				  asp-route-matricula="@Model.Matricula"
-				  asp-route-typeVehicle="@Model.TypeVehicle"
-				  asp-route-selectedParkId="@Model.SelectedParkId"
-				  asp-route-selectedSpotIdent="@Model.SelectedSpotIdent"
-				  asp-route-entryTime="@Model.EntryTime"
-				  asp-route-exitTime="@Model.ExitTime">
-				<button type="submit" class="btn btn-info btn-lg w-100">Imprimir Ticket</button>
-			</form>
-		</div>
-
-
-		<form method="post" asp-page-handler="Saida">
-			<input type="hidden" asp-for="Matricula" />
-			<input type="hidden" asp-for="TypeVehicle" />
-			<input type="hidden" asp-for="SelectedSpotIdent" />
-			<input type="hidden" asp-for="SelectedParkId" />
-			<input type="hidden" asp-for="EntryTime" />
-
-			<button type="submit" class="btn btn-warning btn-lg w-100">Sair do Estacionamento</button>
-			<br />
-			<br />
-			<br />
-		</form>
-
-		<a href="/UserPage/UserManager" class="btn btn-danger btn-lg w-25 h-25">Voltar</a>
-
-
-	</div>
-</div>
 
 
 

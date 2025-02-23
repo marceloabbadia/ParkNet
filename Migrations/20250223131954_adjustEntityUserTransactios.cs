@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ProjParkNet.Migrations
 {
     /// <inheritdoc />
-    public partial class addUserRegister : Migration
+    public partial class adjustEntityUserTransactios : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -62,7 +62,7 @@ namespace ProjParkNet.Migrations
                     district_park = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     zip_code = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     telephone_number = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    price_hour = table.Column<decimal>(type: "decimal(10,2)", precision: 10, scale: 2, nullable: false),
+                    price_monthly_agreement = table.Column<decimal>(type: "decimal(10,2)", precision: 10, scale: 2, nullable: false),
                     price_minute = table.Column<decimal>(type: "decimal(10,2)", precision: 10, scale: 2, nullable: false)
                 },
                 constraints: table =>
@@ -177,12 +177,31 @@ namespace ProjParkNet.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "UserBalances",
+                columns: table => new
+                {
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    CurrentBalance = table.Column<decimal>(type: "decimal(10,2)", precision: 10, scale: 2, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserBalances", x => x.UserId);
+                    table.ForeignKey(
+                        name: "FK_UserBalances_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "UserSystems",
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     nif = table.Column<string>(type: "nvarchar(9)", maxLength: 9, nullable: false),
-                    driving_license = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false)
+                    driving_license = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false),
+                    credit_card = table.Column<string>(type: "nvarchar(16)", maxLength: 16, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -190,6 +209,29 @@ namespace ProjParkNet.Migrations
                     table.ForeignKey(
                         name: "FK_UserSystems_AspNetUsers_Id",
                         column: x => x.Id,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserTransactions",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Amount = table.Column<decimal>(type: "decimal(10,2)", precision: 10, scale: 2, nullable: false),
+                    TransactionDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Type = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserTransactions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_UserTransactions_AspNetUsers_UserId",
+                        column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -243,12 +285,13 @@ namespace ProjParkNet.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ParkingSpotId = table.Column<int>(type: "int", nullable: false),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    ParkingSpotId = table.Column<int>(type: "int", nullable: false),
                     Matricula = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     type_vehicle = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     EntryTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ExitTime = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    TotalTimeMinutes = table.Column<int>(type: "int", nullable: false),
                     Price = table.Column<decimal>(type: "decimal(10,2)", precision: 10, scale: 2, nullable: true),
                     IsPaid = table.Column<bool>(type: "bit", nullable: false)
                 },
@@ -260,13 +303,12 @@ namespace ProjParkNet.Migrations
                         column: x => x.ParkingSpotId,
                         principalTable: "ParkingSpots",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_ParkingUsages_UserSystems_UserId",
                         column: x => x.UserId,
                         principalTable: "UserSystems",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateIndex(
@@ -302,6 +344,13 @@ namespace ProjParkNet.Migrations
                 column: "NormalizedEmail");
 
             migrationBuilder.CreateIndex(
+                name: "IX_AspNetUsers_Email",
+                table: "AspNetUsers",
+                column: "Email",
+                unique: true,
+                filter: "[Email] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
                 name: "UserNameIndex",
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
@@ -327,6 +376,29 @@ namespace ProjParkNet.Migrations
                 name: "IX_ParkingUsages_UserId",
                 table: "ParkingUsages",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserBalances_UserId",
+                table: "UserBalances",
+                column: "UserId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserSystems_credit_card",
+                table: "UserSystems",
+                column: "credit_card",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserSystems_nif",
+                table: "UserSystems",
+                column: "nif",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserTransactions_UserId",
+                table: "UserTransactions",
+                column: "UserId");
         }
 
         /// <inheritdoc />
@@ -349,6 +421,12 @@ namespace ProjParkNet.Migrations
 
             migrationBuilder.DropTable(
                 name: "ParkingUsages");
+
+            migrationBuilder.DropTable(
+                name: "UserBalances");
+
+            migrationBuilder.DropTable(
+                name: "UserTransactions");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

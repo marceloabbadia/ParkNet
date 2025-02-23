@@ -58,7 +58,7 @@
                             Vaga @usage.ParkingSpot.SpotIdent
                         </td>
                         <td>@usage.TypeVehicle</td>
-                        <td>@(usage.Price?.ToString("C") ?? "N/A")</td>
+                        <td>@(usage.Price?.ToString("C", new System.Globalization.CultureInfo("pt-PT")) ?? "N/A")</td>
                         <td>
                             @if (usage.IsPaid)
                             {

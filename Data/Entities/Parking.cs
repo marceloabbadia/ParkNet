@@ -24,8 +24,8 @@ namespace ProjParkNet.Data.Entities
         [Column("telephone_number")]
         public string TelephoneNumber { get; set; }
 
-        [Column("price_hour")]
-        public decimal PricePerHour { get; set; }
+        [Column("price_monthly_agreement")]
+        public decimal MonthlyAgreement { get; set; }
 
         [Column("price_minute")]
         public decimal PricePerMinute { get; set; }

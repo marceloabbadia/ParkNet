@@ -10,61 +10,89 @@ public class ParkingUsageRepository
         _context = context;
     }
 
-    public async Task<ParkingUsage?> GetActiveParkingForUserAsync(string userId)
+    public async Task<int?> EndParkingAsync(string userId)
+    {
+        if (string.IsNullOrEmpty(userId))
+        {
+            throw new ArgumentNullException(nameof(userId), "User ID cannot be empty or null.");
+        }
+
+        // Busca o estacionamento ativo do usuário
+        var activeParking = await GetActiveParkingForUserAsync(userId);
+        if (activeParking == null)
+        {
+            throw new InvalidOperationException("No active parking found for the given user.");
+        }
+
+        // Verifica se a vaga de estacionamento existe
+        if (activeParking.ParkingSpot == null)
+        {
+            throw new InvalidOperationException("The associated parking spot is not available.");
+        }
+
+        // Calcula o tempo total e o preço, definindo o horário de saída dentro do método
+        CalculateUsageData(activeParking);
+
+        // Libera a vaga de estacionamento
+        activeParking.ParkingSpot.IsOccupied = false;
+
+        // Salva as alterações no banco de dados
+        await _context.SaveChangesAsync();
+
+        return activeParking.Id;
+    }
+
+    private void CalculateUsageData(ParkingUsage parkingUsage)
+    {
+        if (parkingUsage == null)
+        {
+            throw new ArgumentNullException(nameof(parkingUsage), "O registro de uso de estacionamento não pode ser nulo.");
+        }
+
+        // Define o horário de saída
+        parkingUsage.ExitTime = DateTime.UtcNow;
+
+        // Verifica se o horário de entrada é válido
+        if (parkingUsage.EntryTime == default(DateTime))
+        {
+            throw new InvalidOperationException("O horário de entrada não foi definido.");
+        }
+
+        // Verifica se a vaga de estacionamento e o estacionamento associado estão disponíveis
+        if (parkingUsage.ParkingSpot?.ParkingFloor?.Parking == null)
+        {
+            throw new InvalidOperationException("A vaga de estacionamento ou o estacionamento associado não foram encontrados.");
+        }
+
+        // Recupera o preço por minuto do estacionamento
+        decimal pricePerMinute = parkingUsage.ParkingSpot.ParkingFloor.Parking.PricePerMinute;
+
+        // Calcula o tempo total em minutos
+        TimeSpan totalTime = parkingUsage.ExitTime.Value - parkingUsage.EntryTime;
+        parkingUsage.TotalTimeMinutes = (int)Math.Ceiling(totalTime.TotalMinutes);
+
+        // Calcula o preço com base no tempo total
+        parkingUsage.Price = parkingUsage.TotalTimeMinutes * pricePerMinute;
+    }
+
+
+    public async Task<ParkingUsage> GetActiveParkingForUserAsync(string userId)
     {
         return await _context.ParkingUsages
-            .Where(p => p.UserId == userId && p.ExitTime == null)
-            .OrderByDescending(p => p.EntryTime)
-            .FirstOrDefaultAsync();
+            .Include(pu => pu.ParkingSpot)
+            .ThenInclude(ps => ps.ParkingFloor)
+            .ThenInclude(pf => pf.Parking)
+            .FirstOrDefaultAsync(pu => pu.UserId == userId && pu.ExitTime == null);
     }
 
-    //public async Task StartParkingAsync(string userId, int parkingId, string spotIdent, string vehicleType, string plateNumber, DateTime entryTime)
-    //{
-    //    var newParkingUsage = new ParkingUsage
-    //    {
-    //        UserId = userId,
-    //        ParkingId = parkingId,
-    //        SpotIdent = spotIdent,
-    //        VehicleType = vehicleType,
-    //        PlateNumber = plateNumber,
-    //        EntryTime = entryTime
-    //    };
-
-    //    _context.ParkingUsages.Add(newParkingUsage);
-    //    await _context.SaveChangesAsync();
-    //}
-
-    public async Task EndParkingAsync(string userId, DateTime exitTime)
+    public async Task<ParkingUsage> GetActiveParkingUsageForIdAsync(int parkingUsageId)
     {
-        try
-        {
-
-            if (string.IsNullOrEmpty(userId))
-            {
-                throw new ArgumentNullException(nameof(userId), " User ID cannot be empty or null ");
-            }
-
-            var activeParking = await GetActiveParkingForUserAsync(userId);
-
-            if (activeParking != null)
-            {
-                activeParking.ExitTime = exitTime;
-
-                if (activeParking.ParkingSpot != null)
-                {
-                    activeParking.ParkingSpot.IsOccupied = false;
-                }
-                await _context.SaveChangesAsync();
-            }
-
-
-        }
-        catch (Exception ex)
-        {
-            throw new Exception("Error: ", ex);
-        }
+        return await _context.ParkingUsages
+            .Include(pu => pu.ParkingSpot)
+            .ThenInclude(ps => ps.ParkingFloor)
+            .ThenInclude(pf => pf.Parking)
+            .FirstOrDefaultAsync(pu => pu.Id == parkingUsageId);
     }
-
 
 
     public async Task SaveParkingUsageDataAsync(string userId, string matricula, string typeVehicle, int selectedParkId, string selectedSpotIdent, DateTime entryTime)
@@ -73,7 +101,7 @@ public class ParkingUsageRepository
         var userExists = await _context.Users.AnyAsync(u => u.Id == userId);
         if (!userExists)
         {
-            throw new Exception("Usuário não encontrado na tabela AspNetUsers.");
+            throw new Exception("User not found.");
         }
 
         // Verificar se a vaga já está ocupada
@@ -98,7 +126,9 @@ public class ParkingUsageRepository
             Matricula = matricula,
             TypeVehicle = typeVehicle,
             ParkingSpotId = spot.Id,
-            EntryTime = entryTime
+            EntryTime = RoundToMinute(DateTime.UtcNow),
+            Price = 0.0m,
+            IsPaid = false
         };
 
         // Marcar a vaga como ocupada
@@ -134,5 +164,36 @@ public class ParkingUsageRepository
 
         // Ordena por data de entrada (mais recente primeiro)
         return await query.OrderByDescending(pu => pu.EntryTime).ToListAsync();
+    }
+
+    private DateTime RoundToMinute(DateTime dateTime)
+    {
+        return new DateTime(
+            dateTime.Year,
+            dateTime.Month,
+            dateTime.Day,
+            dateTime.Hour,
+            dateTime.Minute,
+            0, // Zera os segundos
+            DateTimeKind.Utc
+        );
+    }
+
+    public async Task UpdatePaymentStatusAsync(int parkingUsageId, bool isPaid)
+    {
+        // Busca o registro de ParkingUsage pelo ID
+        var parkingUsage = await _context.ParkingUsages
+                .FirstOrDefaultAsync(p => p.Id == parkingUsageId);
+
+        if (parkingUsage == null)
+        {
+            throw new InvalidOperationException("Registro de estacionamento não encontrado.");
+        }
+
+        // Atualiza o status de pagamento
+        parkingUsage.IsPaid = isPaid;
+
+        // Salva as alterações no banco de dados
+        await _context.SaveChangesAsync();
     }
 }
