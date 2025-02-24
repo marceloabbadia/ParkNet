@@ -5,79 +5,82 @@
 }
 
 
-<h2>Financeiro Utilizador</h2>
-
+<h2>Financeiro do Utilizador</h2>
+<br />
 <div class="container">
-    <div class="row">
-        <!-- Coluna Esquerda: Compra de Assinatura -->
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Comprar Assinatura Mensal</h5>
+	<div class="row">
+		<!-- Coluna Esquerda: Compra de Assinatura -->
+		<div class="col-md-6">
+			<div class="card">
+				<div class="card-body">
+					<h5 class="card-title">Comprar Assinatura Mensal</h5>
 
-                    <!-- Selecionar Estacionamento -->
-                    <form method="get">
-                        <div class="mb-3">
-                            <label for="SelectedParkingId" class="form-label">Selecione o Estacionamento:</label>
-                            <select id="SelectedParkingId" name="SelectedParkingId" class="form-select" required>
-                                <option value="">-- Selecione --</option>
-                                @foreach (var parking in Model.Parkings)
-                                {
-                                    <option value="@parking.Id">@parking.NamePark</option>
-                                }
-                            </select>
-                        </div>
-                        <button type="submit" class="btn btn-secondary">Carregar Preço</button>
-                    </form>
+					<!-- Selecionar Estacionamento -->
+					<form method="get">
+						<div class="mb-3">
+							<label for="SelectedParkingId" class="form-label">Selecione o Estacionamento:</label>
+							<select id="SelectedParkingId" name="SelectedParkingId" class="form-select" required>
+								<option value="">-- Selecione --</option>
+								@foreach (var parking in Model.Parkings)
+								{
+									<option value="@parking.Id">@parking.NamePark</option>
+								}
+							</select>
+						</div>
+						<button type="submit" class="btn btn-secondary">Carregar Preço</button>
+					</form>
 
-                    <!-- Exibir Preço da Assinatura -->
-                    @if (Model.SelectedParkingId > 0)
-                    {
-                        <p><strong>Preço da Assinatura Mensal:</strong> @Model.MonthlySubscriptionPrice.ToString("C", new System.Globalization.CultureInfo("pt-PT"))</p>
-                        <form method="post" asp-page-handler="BuyMonthlySubscription">
-                            <input type="hidden" asp-for="SelectedParkingId" />
-                            <button type="submit" class="btn btn-primary">Comprar Assinatura Mensal</button>
-                        </form>
-                    }
-                </div>
-            </div>
-        </div>
+					<!-- Exibir Preço da Assinatura -->
+					@if (Model.SelectedParkingId > 0)
+					{
+						<p><strong>Preço da Assinatura Mensal:</strong> @Model.MonthlySubscriptionPrice.ToString("C", new System.Globalization.CultureInfo("pt-PT"))</p>
+						<form method="post" asp-page-handler="BuyMonthlySubscription">
+							<input type="hidden" asp-for="SelectedParkingId" />
+							<button type="submit" class="btn btn-primary">Comprar Assinatura Mensal</button>
+						</form>
+					}
+				</div>
+			</div>
+		</div>
 
-        <!-- Coluna Direita: Histórico de Transações -->
-        <div class="col-md-6">
-            <div class="card" style="height: 560px; overflow-y: auto;">
-                <div class="card-body">
-                    <h5 class="card-title">Histórico de Transações</h5>
-                    @if (Model.Transactions == null || !Model.Transactions.Any())
-                    {
-                        <p>Nenhuma transação encontrada.</p>
-                    }
-                    else
-                    {
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th>Data</th>
-                                    <th>Descrição</th>
-                                    <th>Valor</th>
-                                    <th>Tipo</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var transaction in Model.Transactions)
-                                {
-                                    <tr>
-                                        <td>@transaction.TransactionDate.ToString("dd/MM/yyyy HH:mm")</td>
-                                        <td>@transaction.Description</td>
-                                        <td>@transaction.Amount.ToString("C", new System.Globalization.CultureInfo("pt-PT"))</td>
-                                        <td>@transaction.Type</td>
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
-                    }
-                </div>
-            </div>
-        </div>
-    </div>
+		<!-- Coluna Direita: Histórico de Transações -->
+		<div class="col-md-6">
+			<div class="card" style="height: 560px; overflow-y: auto;">
+				<div class="card-body">
+					<h5 class="card-title">Histórico de Transações</h5>
+					@if (Model.Transactions == null || !Model.Transactions.Any())
+					{
+						<p>Nenhuma transação encontrada.</p>
+					}
+					else
+					{
+						<table class="table table-striped">
+							<thead>
+								<tr>
+									<th>Data</th>
+									<th>Descrição</th>
+									<th>Valor</th>
+									<th>Tipo</th>
+								</tr>
+							</thead>
+							<tbody>
+								@foreach (var transaction in Model.Transactions)
+								{
+									<tr>
+										<td>@transaction.TransactionDate.ToString("dd/MM/yyyy HH:mm")</td>
+										<td>@transaction.Description</td>
+										<td>@transaction.Amount.ToString("C", new System.Globalization.CultureInfo("pt-PT"))</td>
+										<td>@transaction.Type</td>
+									</tr>
+								}
+							</tbody>
+						</table>
+						<br />
+						<br />
+						<br />
+					}
+				</div>
+			</div>
+		</div>
+	</div>
 </div>

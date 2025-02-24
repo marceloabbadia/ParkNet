@@ -25,6 +25,8 @@ namespace ProjParkNet.Pages.ParkingPage.Admin
 
         [BindProperty]
         public decimal DebitBalanceAmount { get; set; } // Agora separado de AddBalanceAmount
+        public string PaymentMethod { get; set; } // Método de pagamento (ex: "CreditCard", "Balance")
+
 
         public async Task<IActionResult> OnGetAsync()
         {
@@ -84,7 +86,8 @@ namespace ProjParkNet.Pages.ParkingPage.Admin
                userId,
                AddBalanceAmount,
                "Credito",
-               "Crédito adicionado pelo administrador"
+               "Crédito adicionado pelo administrador",
+                PaymentMethod ="Realizado no Caixa"
         );
 
             // Atualiza o saldo e as transações após a operação
@@ -137,7 +140,8 @@ namespace ProjParkNet.Pages.ParkingPage.Admin
                 userId,
                 DebitBalanceAmount, // Valor negativo para débito
                 "Debito",
-                "Débito realizado pelo administrador"
+                "Débito realizado pelo administrador",
+                PaymentMethod = "Realizado no Caixa"
             );
 
             // Atualiza o saldo e as transações após a operação

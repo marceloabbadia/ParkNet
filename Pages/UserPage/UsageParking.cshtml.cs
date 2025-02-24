@@ -1,6 +1,7 @@
 
 using System.Security.Claims;
 using ProjParkNet.Data.Entities;
+using ProjParkNet.Models.Parking;
 
 namespace ProjParkNet.Pages.UserPage
 {
@@ -10,6 +11,7 @@ namespace ProjParkNet.Pages.UserPage
         private readonly ParkingUsageRepository _parkingUsageRepository;
         private readonly ParkingRepository _parkingRepository;
         private readonly ParkingSpotsRepository _parkingSpotsRepository;
+
 
         public UserModel(ParkingUsageRepository parkingUsageRepository, ParkingRepository parkingRepository, ParkingSpotsRepository parkingSpotsRepository)
         {
@@ -153,15 +155,16 @@ namespace ProjParkNet.Pages.UserPage
             try
             {
                 // Finaliza o estacionamento chamando o repositório
-                var parkingUsageId = await _parkingUsageRepository.EndParkingAsync(userId);
-                if (parkingUsageId == null)
-                {
-                    ErrorMessage = "Não foi possível encontrar um registro ativo de estacionamento.";
-                    return Page();
-                }
+                //var parkingUsageId = await _parkingUsageRepository.EndParkingAsync(userId);
+                //if (parkingUsageId == null)
+                //{
+                //    ErrorMessage = "Não foi possível encontrar um registro ativo de estacionamento.";
+                //    return Page();
+                //}
 
                 // Redireciona para a página de pagamento com o ID do estacionamento
-                return RedirectToPage("/UserPage/Payment", new { parkingUsageId });
+                //return RedirectToPage("/UserPage/Payment", new { parkingUsageId });
+                return RedirectToPage("/UserPage/Payment");
                
             }
             catch (Exception ex)

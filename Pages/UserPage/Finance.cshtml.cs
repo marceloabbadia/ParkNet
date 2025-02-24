@@ -24,6 +24,8 @@ public class FinanceModel : PageModel
     public List<Parking> Parkings { get; set; } = new List<Parking>(); // Lista de estacionamentos disponíveis
 
     public decimal MonthlySubscriptionPrice { get; set; } // Preço da assinatura mensal
+    public string PaymentMethod { get; set; } // Método de pagamento (ex: "CreditCard", "Balance")
+
 
     public async Task<IActionResult> OnGetAsync()
     {
@@ -92,7 +94,8 @@ public class FinanceModel : PageModel
             userId,
             subscriptionPrice,
             "Debito",
-            $"Compra de assinatura mensal para o estacionamento: {selectedParking.NamePark}"
+             $"Compra de assinatura mensal para o estacionamento: {PaymentMethod}",
+             PaymentMethod
         );
 
         // Atualiza o saldo e o histórico

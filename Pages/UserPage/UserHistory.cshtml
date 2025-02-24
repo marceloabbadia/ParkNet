@@ -1,86 +1,89 @@
 ﻿@page
 @model ProjParkNet.Pages.UserPage.UserHistoryModel
 @{
-    ViewData["Title"] = "Histórico de Utilização";
+	ViewData["Title"] = "Histórico de Utilização";
 }
 
+
 <div class="container">
-    <h1 class="mt-4">Histórico de Utilização</h1>
-    <p class="lead">Aqui está o seu histórico de utilização do estacionamento.</p>
+	<h1 class="mt-4">Histórico de Utilização</h1>
+	<p class="lead">Aqui está o seu histórico de utilização do estacionamento.</p>
 
-    <form method="get" class="mb-4">
-        <div class="row">
-            <div class="col-md-3">
-                <label for="StartDate">Data de Início:</label>
-                <input type="date" asp-for="StartDate" class="form-control" />
-            </div>
-            <div class="col-md-3">
-                <label for="EndDate">Data de Término:</label>
-                <input type="date" asp-for="EndDate" class="form-control" />
-            </div>
-            <div class="col-md-2 align-self-end">
-                <button type="submit" class="btn btn-primary">Filtrar</button>
-                <a href="/UserPage/UserHistory" class="btn btn-secondary">Limpar</a>
-            </div>
-        </div>
-    </form>
+	<form method="get" class="mb-4">
+		<div class="row">
+			<div class="col-md-3">
+				<label for="StartDate">Data de Início:</label>
+				<input type="date" asp-for="StartDate" class="form-control" />
+			</div>
+			<div class="col-md-3">
+				<label for="EndDate">Data de Término:</label>
+				<input type="date" asp-for="EndDate" class="form-control" />
+			</div>
+			<div class="col-md-2 align-self-end">
+				<button type="submit" class="btn btn-primary">Filtrar</button>
+				<a href="/UserPage/UserHistory" class="btn btn-secondary">Limpar</a>
+			</div>
+		</div>
+	</form>
 
-    <div class="mt-4">
-        <br />
-        <a href="/UserPage/UserManager" class="btn btn-danger">Voltar </a>
+	<div class="mt-4">
+		<br />
+		<a href="/UserPage/UserManager" class="btn btn-danger">Voltar </a>
 
-    </div>
+	</div>
 
-    @if (Model.ParkingHistory.Any())
-    {
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <br />
+	@if (Model.ParkingHistory.Any())
+	{
+		<div class="table-responsive">
+			<table class="table table-striped" style="height: 500px; overflow-y: auto; display: block;">
+				<thead>
+					<tr>
+						<br />
 
-                    <th>Data/Hora de Entrada</th>
-                    <th>Data/Hora de Saída</th>
-                    <th>Localização</th>
-                    <th>Tipo de Veículo</th>
-                    <th>Valor Pago</th>
-                    <th>Status de Pagamento</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var usage in Model.ParkingHistory)
-                {
-                    <tr>
-                        <td>@usage.EntryTime.ToString("dd/MM/yyyy HH:mm")</td>
-                        <td>@(usage.ExitTime?.ToString("dd/MM/yyyy HH:mm") ?? "Em uso")</td>
-                        <td>
-                            @usage.ParkingSpot.ParkingFloor.Parking.NamePark -
-                            Andar @usage.ParkingSpot.ParkingFloor.FloorNumber -
-                            Vaga @usage.ParkingSpot.SpotIdent
-                        </td>
-                        <td>@usage.TypeVehicle</td>
-                        <td>@(usage.Price?.ToString("C", new System.Globalization.CultureInfo("pt-PT")) ?? "N/A")</td>
-                        <td>
-                            @if (usage.IsPaid)
-                            {
-                                <span class="badge bg-success">Pago</span>
-                            }
-                            else
-                            {
-                                <span class="badge bg-warning">Pendente</span>
-                            }
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    }
-    else
-    {
-        <div class="alert alert-info" role="alert">
-            Nenhum registro de utilização encontrado.
-        </div>
-    }
-    
+						<th>Data/Hora de Entrada</th>
+						<th>Data/Hora de Saída</th>
+						<th>Localização</th>
+						<th>Tipo de Veículo</th>
+						<th>Valor Pago</th>
+						<th>Status de Pagamento</th>
+					</tr>
+				</thead>
+				<tbody>
+					@foreach (var usage in Model.ParkingHistory)
+					{
+						<tr>
+							<td>@usage.EntryTime.ToString("dd/MM/yyyy HH:mm")</td>
+							<td>@(usage.ExitTime?.ToString("dd/MM/yyyy HH:mm") ?? "Em uso")</td>
+							<td>
+								@usage.ParkingSpot.ParkingFloor.Parking.NamePark -
+								Andar @usage.ParkingSpot.ParkingFloor.FloorNumber -
+								Vaga @usage.ParkingSpot.SpotIdent
+							</td>
+							<td>@usage.TypeVehicle</td>
+							<td>@(usage.Price?.ToString("C", new System.Globalization.CultureInfo("pt-PT")) ?? "N/A")</td>
+							<td>
+								@if (usage.IsPaid)
+								{
+									<span class="badge bg-success">Pago</span>
+								}
+								else
+								{
+									<span class="badge bg-warning">Pendente</span>
+								}
+							</td>
+						</tr>
+					}
+				</tbody>
+			</table>
+		</div>
+	}
+	else
+	{
+		<div class="alert alert-info" role="alert">
+			Nenhum registro de utilização encontrado.
+		</div>
+	}
 
-   
+
+
 </div>
